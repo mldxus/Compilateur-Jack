@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Microsoft Teams
+Type=Application
+Exec=chromium-browser https://teams.microsoft.com/
+Icon=/opt/icons/teams.png

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<application-state>
+  <context id="">
+    <application id="org.gnome.Nautilus.desktop" score="17" last-seen="1727678720"/>
+    <application id="org.thonny.Thonny.desktop" score="178" last-seen="1727680049"/>
+    <application id="org.gnome.FileRoller.desktop" score="5" last-seen="1727678288"/>
+    <application id="org.gnome.gedit.desktop" score="28" last-seen="1727678748"/>
+    <application id="chromium-browser.desktop" score="142" last-seen="1727680217"/>
+    <application id="apport-gtk.desktop" score="0" last-seen="1727677400"/>
+  </context>
+</application-state>

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Authentification Internet
+Type=Application
+Exec=chromium-browser https://auth-utilisateur.univ-orleans.fr:6082/php/uid.php?vsys=1&rule=0&url=http://post-auth.univ-orleans.fr
+Icon=chromium-browser

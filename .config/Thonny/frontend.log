@@ -1,0 +1,7 @@
+INFO    thonny: Thonny version: 3.3.14
+ERROR   thonny.plugins.pylint: Pylint: /usr/lib/python3/dist-packages/pylint/reporters/text.py:206: UserWarning: Don't recognize the argument '{'filename'' in the --msg-template. Are you sure it is supported on the current version of pylint?
+  warnings.warn(
+ERROR   thonny.plugins.pylint: Pylint: /usr/lib/python3/dist-packages/pylint/reporters/text.py:206: UserWarning: Don't recognize the argument '{'filename'' in the --msg-template. Are you sure it is supported on the current version of pylint?
+  warnings.warn(
+ERROR   thonny.plugins.pylint: Pylint: /usr/lib/python3/dist-packages/pylint/reporters/text.py:206: UserWarning: Don't recognize the argument '{'filename'' in the --msg-template. Are you sure it is supported on the current version of pylint?
+  warnings.warn(
