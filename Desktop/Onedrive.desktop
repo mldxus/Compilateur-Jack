@@ -1,6 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Name=Microsoft OneDrive
-Type=Application
-Exec=chromium-browser https://onedrive.live.com/about/fr-fr/signin/
-Icon=/opt/icons/onedrive.png

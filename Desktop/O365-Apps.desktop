@@ -1,6 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Name=O365-Apps
-Type=Application
-Exec=chromium-browser https://myapps.microsoft.com/campus.univ-orleans.fr
-Icon=/opt/icons/o365.png
