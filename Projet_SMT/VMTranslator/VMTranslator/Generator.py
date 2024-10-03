@@ -55,6 +55,26 @@ class Generator:
                     return self._commandpush(command)
                 case 'Call':
                     return self.commandcall(command)
+                case 'pop' :
+                    return self.commandpop(command)
+                case 'add' :
+                    return self.commandadd(command)
+                case 'sub' :
+                    return self.commandsub(command)
+                case 'neg' :
+                    return self.commandneg(command)
+                case 'eq' :
+                    return self.commandeq(command)
+                case 'gt' :
+                    return self.commandgt(command)
+                case 'lt' :
+                    return self.commandlt(command)
+                case 'and' :
+                    return self.commandand(command)
+                case 'or' :
+                    return self.commandor(command)
+                case 'not' :
+                    return self.commandnot(command)
                 case _:
                     print(f'SyntaxError : {command}')
                     exit()
@@ -107,8 +127,118 @@ class Generator:
         """
         return f"""\t//{command['type']} {command['function']} {command['parameter']}
     Code assembleur de {command}\n"""
+    
+    def commandadd(self,command) :
+        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    Code assembleur de {command}\n
+    @SP
+    M=M-1
+    A=M
+    D=M
+    A=A-1
+    M=D+M
+    """
+    
+    def commandsub(self,command) :
+        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    Code assembleur de {command}\n
+    @SP
+    M=M-1
+    A=M
+    D=M
+    A=A-1
+    M=D-M
+    """
+    
+    def commandneg(self,command) :
+        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    Code assembleur de {command}\n
+    @SP
+    M=M-1
+    A=M
+    D=M
+    @0
+    D=A-D
+    @SP
+    M=M-1
+    A+M
+    M+D
+    """
 
-
+    def commandeq(self,command) :
+        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    Code assembleur de {command}\n
+    @SP
+    M=M-1
+    A=M
+    D=M
+    A=A-1
+    D=D-M
+    @IF_TRUE
+    D;JEQ
+    @SP
+    A=M
+    M=0
+    @END_IF
+    0,JMP
+    (IF_TRUE)
+    @0
+    D=A
+    @SP
+    A=M-1
+    M=D-1
+    (END_IF)
+    """
+    
+    def commangt(self,command) :
+        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    Code assembleur de {command}\n
+    @SP
+    M=M-1
+    A=M
+    D=M
+    A=A-1
+    D=D-M
+    @IF_TRUE
+    D;JGT
+    @SP
+    A=M
+    M=0
+    @END_IF
+    0,JMP
+    (IF_TRUE)
+    @0
+    D=A
+    @SP
+    A=M-1
+    M=D-1
+    (END_IF)
+    """
+    
+    def commanlt(self,command) :
+        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    Code assembleur de {command}\n
+    @SP
+    M=M-1
+    A=M
+    D=M
+    A=A-1
+    D=D-M
+    @IF_TRUE
+    D;JLT
+    @SP
+    A=M
+    M=0
+    @END_IF
+    0,JMP
+    (IF_TRUE)
+    @0
+    D=A
+    @SP
+    A=M-1
+    M=D-1
+    (END_IF)
+    """
 if __name__ == '__main__':
     file = sys.argv[1]
     print('-----debut')
