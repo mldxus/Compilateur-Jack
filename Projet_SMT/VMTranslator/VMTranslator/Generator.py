@@ -226,6 +226,34 @@ class Generator:
     @SP
     M=M+1
     """
+    
+    def _commandpushpointer(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @parameter
+    D=A
+    @IF_TRUE
+    D;JEQ
+    @THAT
+    D=M
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @END_IF
+    0;JMP
+    (IF_TRUE)
+    @THIS
+    D=M
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    (END_IF)
+    """
 
     def _commandcall(self, command):
          """
