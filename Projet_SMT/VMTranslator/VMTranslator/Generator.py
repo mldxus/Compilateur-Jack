@@ -96,6 +96,18 @@ class Generator:
             # Faire une fonction par type de segment
             case 'constant':
                 return self._commandpushconstant(command)
+            case 'local':
+                return self._commandpushlocal(command)
+            case 'argument':
+                return self._commandpushargument(command)
+            case 'static':
+                return self._commandpushstatic(command)
+            case 'this':
+                return self._commandpushthis(command)
+            case 'that':
+                return self._commandpushthat(command)
+            case 'pointer':
+                return self._commandpushpointer(command)
             case _:
                 print(f'SyntaxError : {command}')
                 exit()
@@ -112,7 +124,108 @@ class Generator:
         """
         parameter = command['parameter']
         return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n"""
+    Code assembleur de {command}\n
+    @parameter
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    """
+    
+    def _commandpushlocal(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @LCL
+    D=M
+    @parameter
+    A=D+A
+    D=M
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    """
+    
+    def _commandpushargument(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @ARG
+    D=M
+    @parameter
+    A=D+A
+    D=M
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    """
+    
+    def _commandpushthis(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @THIS
+    D=M
+    @parameter
+    A=D+A
+    D=M
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    """
+    
+    def _commandpushthat(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @that
+    D=M
+    @parameter
+    A=D+A
+    D=M
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    """
+    
+    def _commandpushstatic(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @parameter
+    D=M
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    """
+    
+    def _commandpushtemp(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @5
+    D=A
+    @parameter
+    A=D+A
+    D=M
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    """
 
     def _commandcall(self, command):
          """
