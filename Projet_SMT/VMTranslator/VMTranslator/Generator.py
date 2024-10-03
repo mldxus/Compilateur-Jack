@@ -56,7 +56,7 @@ class Generator:
                 case 'Call':
                     return self.commandcall(command)
                 case 'pop' :
-                    return self.commandpop(command)
+                    return self._commandpop(command)
                 case 'add' :
                     return self.commandadd(command)
                 case 'sub' :
@@ -106,8 +106,43 @@ class Generator:
                 return self._commandpushthis(command)
             case 'that':
                 return self._commandpushthat(command)
+            case 'temp':
+                return self._commandpushtemp(command)
             case 'pointer':
                 return self._commandpushpointer(command)
+            case _:
+                print(f'SyntaxError : {command}')
+                exit()
+        
+        def _commandpop(self, command):
+         """
+        Génère le code assembleur pour une commande 'pop'.
+        Appelle des méthodes spécifiques pour chaque type de segment.
+
+        Args:
+            command (dict): Commande VM avec ses arguments.
+
+        Returns:
+            str: Code assembleur généré pour la commande 'pop'.
+        """
+        segment = command['segment']
+        # segment=local|argument|static|this|that|pointer
+        match segment:
+            # Faire une fonction par type de segment
+            case 'local':
+                return self._commandpoplocal(command)
+            case 'argument':
+                return self._commandpopargument(command)
+            case 'static':
+                return self._commandpopstatic(command)
+            case 'this':
+                return self._commandpopthis(command)
+            case 'that':
+                return self._commandpopthat(command)
+            case 'pointer':
+                return self._commandpoppointer(command)
+            case 'temp':
+                return self._commandpoptemp(command)
             case _:
                 print(f'SyntaxError : {command}')
                 exit()
@@ -120,7 +155,7 @@ class Generator:
             command (dict): Contient les informations de la commande (type, segment, valeur).
 
         Returns:
-            str: Code assembleur pour `push constant i`.
+            str: Code assembleur pour 'push constant i'.
         """
         parameter = command['parameter']
         return f"""\t//{command['type']} {command['segment']} {parameter}
@@ -186,7 +221,7 @@ class Generator:
         parameter = command['parameter']
         return f"""\t//{command['type']} {command['segment']} {parameter}
     Code assembleur de {command}\n
-    @that
+    @THAT
     D=M
     @parameter
     A=D+A
@@ -252,6 +287,131 @@ class Generator:
     M=D
     @SP
     M=M+1
+    (END_IF)
+    """
+    
+    def _commandpoplocal(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @LCL
+    D=M
+    @parameter
+    D=D+A
+    @R13
+    M=D
+    @SP
+    AM=M-1
+    D=M
+    @R13
+    A=M
+    M=D
+    """
+    
+    def _commandpopargument(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @ARG
+    D=M
+    @parameter
+    D=D+A
+    @R13
+    M=D
+    @SP
+    AM=M-1
+    D=M
+    @R13
+    A=M
+    M=D
+    """
+    
+    def _commandpopthis(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @THIS
+    D=M
+    @parameter
+    D=D+A
+    @R13
+    M=D
+    @SP
+    AM=M-1
+    D=M
+    @R13
+    A=M
+    M=D
+    """
+    
+    def _commandpopthat(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @THAT
+    D=M
+    @parameter
+    D=D+A
+    @R13
+    M=D
+    @SP
+    AM=M-1
+    D=M
+    @R13
+    A=M
+    M=D
+    """
+    
+    def _commandpopstatic(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @SP
+    AM=M-1
+    D=M
+    @parameter
+    M=D
+    """
+    
+    def _commandpoptemp(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @5
+    D=A
+    @parameter
+    D=D+A
+    @R13
+    M=D
+    @SP
+    AM=M-1
+    D=M
+    @R13
+    A=M
+    M=D
+    """
+    
+    def _commandpoppointer(self,command) :
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+    Code assembleur de {command}\n
+    @parameter
+    D=A
+    @IF_TRUE
+    D;JEQ
+    @SP
+    AM=M-1
+    D=M
+    @THAT
+    M=D
+    @END_IF
+    0;JMP
+    (IF_TRUE)
+    @SP
+    AM=M-1
+    D=M
+    @THIS
+    M=D
     (END_IF)
     """
 
