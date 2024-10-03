@@ -8,7 +8,10 @@ import sys
 
 
 class Reader:
-    """Crée le nombre de ligne et de colonne"""
+    """
+    La classe 'Reader' est responsable de la lecture caractère par caractère du fichier VM.
+    Elle garde une trace des lignes et colonnes pour permettre une bonne gestion des erreurs.
+    """
 
     def __init__(self, file):
         self.char = None
@@ -19,11 +22,22 @@ class Reader:
             self.char = self.file.read(1)
 
     def look(self):
-        """Retourne le nombre de ligne, de le colonne et de character"""
+        """
+        Retourne le caractère actuel avec sa position (ligne, colonne).
+
+        Returns:
+            dict: Le caractère actuel avec sa ligne et sa colonne.
+        """
         return {'line': self._line, 'col': self._col, 'char': self.char}
 
     def next(self):
-        """Si le dernier char est un retour à la ligne : rajoute une ligne et une colonne, sinon rajoute juste une colonne"""
+         """
+        Avance au caractère suivant, en ajustant la ligne et la colonne en fonction
+        du caractère lu (nouvelle ligne ou caractère simple).
+
+        Returns:
+            dict: Le caractère précédent avec sa ligne et sa colonne.
+        """
         res = {'line': self._line, 'col': self._col, 'char': self.char}
         if self.hasNext():
             if self.char == '\n':
@@ -37,7 +51,12 @@ class Reader:
         return res
 
     def hasNext(self):
-        """Retourne faux si il n'y a plus de character, vrai sinon"""
+        """
+        Vérifie s'il reste des caractères à lire dans le fichier.
+
+        Returns:
+            bool: True s'il reste des caractères, False sinon.
+        """
         if self.char:
             return True
         else:

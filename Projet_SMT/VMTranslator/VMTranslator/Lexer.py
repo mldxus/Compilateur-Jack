@@ -9,7 +9,11 @@ import Reader
 
 
 class Lexer:
-    """No comment"""
+     """
+    La classe 'Lexer' est responsable de la tokenisation des commandes VM. Elle utilise
+    un 'Reader' pour lire le fichier VM et diviser les lignes en tokens (mots, symboles, etc.)
+    utilisables par le 'Parser'.
+    """
 
     def __init__(self, file):
         self.reader = Reader.Reader(file)
@@ -21,7 +25,7 @@ class Lexer:
         t prend la valeur du 2eme char (à la position 1), si il
         y a un char à la position 2, t prend cette valeur.
         Si le char à la position.
-        Cherche si c'est un commentaire et retourne le commentaire.
+        Cherche si il y a des commentaires et les ignore.
         """
         t = self.reader.next()
         if self.reader.hasNext():
@@ -55,7 +59,7 @@ class Lexer:
         return res
 
     def next(self):
-        """No comment"""
+        """Retourne le token actuel et charge le suivant."""
         res = self.token
         self.token = self._read()
         return res

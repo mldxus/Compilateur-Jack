@@ -5,24 +5,43 @@ import Lexer
 
 
 class Parser:
-    """No comment"""
+    """
+    La classe 'Parser' est responsable d'analyser les commandes VM à partir du fichier
+    et de les convertir en une représentation structurée qui peut être utilisée pour
+    la génération de code assembleur.
+    """
 
     def __init__(self, file):
         self.lexer = Lexer.Lexer(file)
         self.command = self._read()
 
     def next(self):
-        """No comment"""
+         """
+        Retourne la commande actuelle et charge la suivante.
+
+        Returns:
+            dict: La commande actuelle avant de charger la suivante.
+        """
         res = self.command
         self.command = self._read()
         return res
 
     def look(self):
-        """ No comment """
+        """
+        Permet de consulter la commande actuelle sans avancer dans le fichier.
+
+        Returns:
+            dict: La commande actuelle.
+        """
         return self.command
 
     def hasNext(self):
-        """No comment"""
+        """
+        Vérifie s'il reste des commandes à analyser dans le fichier VM.
+
+        Returns:
+            bool: True s'il y a encore des commandes, False sinon.
+        """
         return self.command is not None
 
     def __iter__(self):
@@ -35,7 +54,13 @@ class Parser:
             raise StopIteration
 
     def _read(self):
-        # No comment
+        """
+        Lit et interprète la prochaine commande dans le fichier. Identifie le type de commande
+        et appelle la méthode appropriée pour l'analyser.
+
+        Returns:
+            dict: La commande structurée avec ses arguments.
+        """
         command = self.lexer.look()
         if command is None:
             return None
@@ -57,12 +82,22 @@ class Parser:
                     exit()
 
     def _commandarithmetic(self):
-        # No comment
+         """
+        Traite les commandes arithmétiques comme `add`, `sub`, `neg`.
+
+        Returns:
+            dict: Commande avec type et informations associées.
+        """
         command = self.lexer.next()
         return {'line': command['line'], 'col': command['col'], 'type': command['token']}
 
     def _commandpushpop(self):
-        # No comment
+        """
+        Traite les commandes `push` et `pop`, en vérifiant le segment et le paramètre associés.
+
+        Returns:
+            dict: Commande structurée avec type, segment et paramètre.
+        """
         command = self.lexer.next()
         segment = self.lexer.next()
         parameter = self.lexer.next()
@@ -74,7 +109,6 @@ class Parser:
             , 'segment': segment['token'], 'parameter': parameter['token']}
 
     def _commandbranching(self):
-        # No comment
         command = self.lexer.next()
         label = self.lexer.next()
         if label is None or label['type'] != 'string':
@@ -85,7 +119,6 @@ class Parser:
             , 'label': label['token']}
 
     def _commandfunction(self):
-        # No comment
         command = self.lexer.next()
         name = self.lexer.next()
         parameter = self.lexer.next()
@@ -97,7 +130,6 @@ class Parser:
             , 'function': name['token'], 'parameter': parameter['token']}
 
     def _commandreturn(self):
-        # No comment
         command = self.lexer.next()
         return {'line': command['line'], 'col': command['col'], 'type': command['token']}
 
