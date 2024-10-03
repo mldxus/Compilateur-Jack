@@ -352,6 +352,41 @@ class Generator:
     M=D-1
     (END_IF)
     """
+    
+    def commandand(self,command) :
+        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    Code assembleur de {command}\n
+    @SP
+    AM=M-1
+    D=M
+    @SP
+    AM=M-1
+    M=D&M
+    @SP
+    M=M+1
+    """
+    
+    def commandor(self,command) :
+        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    Code assembleur de {command}\n
+    @SP
+    AM=M-1
+    D=M
+    @SP
+    AM=M-1
+    M=D|M
+    @SP
+    M=M+1
+    """
+    
+    def commandnot(self,command) :
+        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    Code assembleur de {command}\n
+    @SP
+    A=M-1
+    M=!M
+    """
+    
 if __name__ == '__main__':
     file = sys.argv[1]
     print('-----debut')
