@@ -7,7 +7,7 @@ import Generator
 
 
 class Translator:
-   """
+    """
     La classe 'Translator' est responsable de la traduction des fichiers VM (ou d'un dossier contenant plusieurs fichiers VM)
     en code assembleur pour la machine Hack. Elle utilise la classe 'Generator' pour générer le code assembleur
     correspondant à chaque commande VM, après avoir interprété le fichier.
@@ -46,7 +46,7 @@ class Translator:
             self.asm.write(command)
 
     def _bootstrap(self):
-         """
+        """
         Génère le code assembleur nécessaire pour initialiser la pile à l'adresse 256 et appeler la fonction 'Sys.init'.
         Ce code est requis pour que la machine virtuelle Hack puisse démarrer correctement.
 
