@@ -16,7 +16,7 @@ class Parser:
         self.command = self._read()
 
     def next(self):
-         """
+        """
         Retourne la commande actuelle et charge la suivante.
 
         Returns:
@@ -82,7 +82,7 @@ class Parser:
                     exit()
 
     def _commandarithmetic(self):
-         """
+        """
         Traite les commandes arithmétiques comme `add`, `sub`, `neg`.
 
         Returns:
