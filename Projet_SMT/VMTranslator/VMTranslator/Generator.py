@@ -80,7 +80,7 @@ class Generator:
                     exit()
 
     def _commandpush(self, command):
-         """
+        """
         Génère le code assembleur pour une commande 'push'.
         Appelle des méthodes spécifiques pour chaque type de segment.
 
@@ -90,9 +90,9 @@ class Generator:
         Returns:
             str: Code assembleur généré pour la commande 'push'.
         """
-         segement = command['segment']
+        segment = command['segment']
         # segment=local|argument|static|constant|this|that|pointer
-         match segment:
+        match segment:
                 # Faire une fonction par type de segment
                 case 'constant':
                     return self._commandpushconstant(command)
@@ -114,19 +114,19 @@ class Generator:
                     print(f'SyntaxError : {command}')
                     exit()
             
-         def _commandpop(self, command):
-           """Génère le code assembleur pour une commande 'pop'.
-        Appelle des méthodes spécifiques pour chaque type de segment.
+        def _commandpop(self, command):
+         """ Génère le code assembleur pour une commande 'pop'.
+            Appelle des méthodes spécifiques pour chaque type de segment.
 
-        Args:
-            command (dict): Commande VM avec ses arguments.
+            Args:
+                command (dict): Commande VM avec ses arguments.
 
-        Returns:
-            str: Code assembleur généré pour la commande 'pop'.
-        """
-         segment = command['segment']
+            Returns:
+                str: Code assembleur généré pour la commande 'pop'.
+         """
+        segment = command['segment']
         # segment=local|argument|static|this|that|pointer
-         match segment:
+        match segment:
                 # Faire une fonction par type de segment
                 case 'local':
                     return self._commandpoplocal(command)
@@ -568,11 +568,11 @@ class Generator:
     
     def commandnot(self,command) :
         return f"""\t//{command['type']} {command['function']} {command['parameter']}
-    Code assembleur de {command}\n
-    @SP
-    A=M-1
-    M=!M
-    """
+        Code assembleur de {command}\n
+        @SP
+        A=M-1
+        M=!M
+        """
     
 if __name__ == '__main__':
     file = sys.argv[1]
