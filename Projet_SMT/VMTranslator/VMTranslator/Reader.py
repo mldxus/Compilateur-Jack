@@ -31,7 +31,7 @@ class Reader:
         return {'line': self._line, 'col': self._col, 'char': self.char}
 
     def next(self):
-         """
+        """
         Avance au caractère suivant, en ajustant la ligne et la colonne en fonction
         du caractère lu (nouvelle ligne ou caractère simple).
 

@@ -90,33 +90,32 @@ class Generator:
         Returns:
             str: Code assembleur généré pour la commande 'push'.
         """
-        segment = command['segment']
+         segement = command['segment']
         # segment=local|argument|static|constant|this|that|pointer
-        match segment:
-            # Faire une fonction par type de segment
-            case 'constant':
-                return self._commandpushconstant(command)
-            case 'local':
-                return self._commandpushlocal(command)
-            case 'argument':
-                return self._commandpushargument(command)
-            case 'static':
-                return self._commandpushstatic(command)
-            case 'this':
-                return self._commandpushthis(command)
-            case 'that':
-                return self._commandpushthat(command)
-            case 'temp':
-                return self._commandpushtemp(command)
-            case 'pointer':
-                return self._commandpushpointer(command)
-            case _:
-                print(f'SyntaxError : {command}')
-                exit()
-        
-        def _commandpop(self, command):
-         """
-        Génère le code assembleur pour une commande 'pop'.
+         match segment:
+                # Faire une fonction par type de segment
+                case 'constant':
+                    return self._commandpushconstant(command)
+                case 'local':
+                    return self._commandpushlocal(command)
+                case 'argument':
+                    return self._commandpushargument(command)
+                case 'static':
+                    return self._commandpushstatic(command)
+                case 'this':
+                    return self._commandpushthis(command)
+                case 'that':
+                    return self._commandpushthat(command)
+                case 'temp':
+                    return self._commandpushtemp(command)
+                case 'pointer':
+                    return self._commandpushpointer(command)
+                case _:
+                    print(f'SyntaxError : {command}')
+                    exit()
+            
+         def _commandpop(self, command):
+           """Génère le code assembleur pour une commande 'pop'.
         Appelle des méthodes spécifiques pour chaque type de segment.
 
         Args:
@@ -125,27 +124,27 @@ class Generator:
         Returns:
             str: Code assembleur généré pour la commande 'pop'.
         """
-        segment = command['segment']
+         segment = command['segment']
         # segment=local|argument|static|this|that|pointer
-        match segment:
-            # Faire une fonction par type de segment
-            case 'local':
-                return self._commandpoplocal(command)
-            case 'argument':
-                return self._commandpopargument(command)
-            case 'static':
-                return self._commandpopstatic(command)
-            case 'this':
-                return self._commandpopthis(command)
-            case 'that':
-                return self._commandpopthat(command)
-            case 'pointer':
-                return self._commandpoppointer(command)
-            case 'temp':
-                return self._commandpoptemp(command)
-            case _:
-                print(f'SyntaxError : {command}')
-                exit()
+         match segment:
+                # Faire une fonction par type de segment
+                case 'local':
+                    return self._commandpoplocal(command)
+                case 'argument':
+                    return self._commandpopargument(command)
+                case 'static':
+                    return self._commandpopstatic(command)
+                case 'this':
+                    return self._commandpopthis(command)
+                case 'that':
+                    return self._commandpopthat(command)
+                case 'pointer':
+                    return self._commandpoppointer(command)
+                case 'temp':
+                    return self._commandpoptemp(command)
+                case _:
+                    print(f'SyntaxError : {command}')
+                    exit()
 
     def _commandpushconstant(self, command):
         """
@@ -426,7 +425,7 @@ class Generator:
         Returns:
             str: Code assembleur pour 'call function'.
         """
-        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+         return f"""\t//{command['type']} {command['function']} {command['parameter']}
     Code assembleur de {command}\n"""
     
     def commandadd(self,command) :
