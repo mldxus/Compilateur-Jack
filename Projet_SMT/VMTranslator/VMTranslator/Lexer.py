@@ -3,9 +3,7 @@ import sys
 
 import Reader
 
-'''Import le programme Reader et utilise ses fonctions
-
-'''
+'''Import le programme Reader et utilise ses fonctions'''
 
 
 class Lexer:
@@ -15,11 +13,11 @@ class Lexer:
     utilisables par le 'Parser'.
     """
 
-    def __init__(self, file):
+     def __init__(self, file):
         self.reader = Reader.Reader(file)
         self.token = self._read()
 
-    def _comment(self):
+     def _comment(self):
         """Utilise les fonctions 'next()' et 'hasNext()' du
         programme reader.py.
         t prend la valeur du 2eme char (à la position 1), si il
@@ -44,12 +42,12 @@ class Lexer:
                 if t is None or t['char'] == '/':
                     return
 
-    def _skip(self):
+     def _skip(self):
         # No comment
         self.reader.next()
         return
 
-    def _toke(self):
+     def _toke(self):
         # No comment
         res = ''
         t = self.reader.next()
@@ -58,13 +56,13 @@ class Lexer:
             t = self.reader.next()
         return res
 
-    def next(self):
+     def next(self):
         """Retourne le token actuel et charge le suivant."""
         res = self.token
         self.token = self._read()
         return res
 
-    def _read(self):
+     def _read(self):
         # No comment
         token = None
         while self.reader.hasNext() and token is None:
@@ -94,15 +92,15 @@ class Lexer:
             else:
                 return {'line': self.line, 'col': self.col, 'type': group.lastgroup, 'token': token}
 
-    def hasNext(self):
+     def hasNext(self):
         """ No comment """
         return self.token is not None
 
-    def look(self):
+     def look(self):
         """ No comment """
         return self.token
 
-    def _pattern(self):
+     def _pattern(self):
         # No comment
         return re.compile(r"""
             (?P<pushpop>push|pop) |
@@ -115,10 +113,10 @@ class Lexer:
             (?P<int>[0-9]+) # des entiers 
         """, re.X)
 
-    def __iter__(self):
+     def __iter__(self):
         return self
 
-    def __next__(self):
+     def __next__(self):
         if self.hasNext():
             return self.next()
         else:
