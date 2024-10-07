@@ -101,17 +101,18 @@ class Lexer:
         return self.token
 
      def _pattern(self):
-        # No comment
+    # Définit l'expression régulière pour reconnaître les différents types de tokens (push, pop, segment, fonction, etc.).
         return re.compile(r"""
-            (?P<pushpop>push|pop) |
-            (?P<segment>local|argument|static|constant|this|that|pointer) |
-            (?P<branching>label|goto|if-goto) |
-            (?P<arithmetic>add|sub|neg|eq|gt|lt|and|or|not) |
-            (?P<function>Function|Call) |
-            (?P<return>return) |
-            (?P<string>[a-zA-Z][a-zA-Z0-9]*) | # label et nom de fonction
-            (?P<int>[0-9]+) # des entiers 
-        """, re.X)
+        (?P<pushpop>push|pop) |
+        (?P<segment>local|argument|static|constant|this|that|pointer|temp) |  # Ajout du | manquant ici
+        (?P<branching>label|goto|if-goto) |
+        (?P<arithmetic>add|sub|neg|eq|gt|lt|and|or|not) |
+        (?P<function>Function|Call) |
+        (?P<return>return) |
+        (?P<string>[a-zA-Z][a-zA-Z0-9]*) | # label et nom de fonction
+        (?P<int>[0-9]+) # des entiers 
+    """, re.X)
+
 
      def __iter__(self):
         return self
