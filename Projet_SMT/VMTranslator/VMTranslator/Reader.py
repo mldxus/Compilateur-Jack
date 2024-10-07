@@ -1,7 +1,7 @@
 """Affiche '-----debut'
 Affiche le tableau crée par la class Reader
 Affiche '-----fin'
-"""
+""" 
 
 import os
 import sys

@@ -4,7 +4,7 @@ import glob
 import sys
 
 import Generator
-
+ 
 
 class Translator:
     """

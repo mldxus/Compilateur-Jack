@@ -3,7 +3,7 @@
 import sys
 import Lexer
 
-
+ 
 class Parser:
     """
     La classe 'Parser' est responsable d'analyser les commandes VM à partir du fichier
