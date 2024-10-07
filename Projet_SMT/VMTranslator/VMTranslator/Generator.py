@@ -114,8 +114,8 @@ class Generator:
                     print(f'SyntaxError : {command}')
                     exit()
             
-        def _commandpop(self, command):
-         """ Génère le code assembleur pour une commande 'pop'.
+    def _commandpop(self, command):
+        """ Génère le code assembleur pour une commande 'pop'.
             Appelle des méthodes spécifiques pour chaque type de segment.
 
             Args:
@@ -158,15 +158,15 @@ class Generator:
         """
         parameter = command['parameter']
         return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @parameter
-    D=A
-    @SP
-    A=M
-    M=D
-    @SP
-    M=M+1
-    """
+        Code assembleur de {command}\n
+        @parameter
+        D=A
+        @SP
+        A=M
+        M=D
+        @SP
+        M=M+1
+        """
     
     def _commandpushlocal(self,command) :
         parameter = command['parameter']
@@ -429,7 +429,7 @@ class Generator:
     Code assembleur de {command}\n"""
     
     def commandadd(self,command) :
-        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+        return f"""\t//{command['type']}  
     Code assembleur de {command}\n
     @SP
     M=M-1
@@ -440,7 +440,7 @@ class Generator:
     """
     
     def commandsub(self,command) :
-        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+        return f"""\t//{command['type']} 
     Code assembleur de {command}\n
     @SP
     M=M-1
@@ -451,7 +451,7 @@ class Generator:
     """
     
     def commandneg(self,command) :
-        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+        return f"""\t//{command['type']} 
     Code assembleur de {command}\n
     @SP
     M=M-1
@@ -466,7 +466,7 @@ class Generator:
     """
 
     def commandeq(self,command) :
-        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+        return f"""\t//{command['type']} 
     Code assembleur de {command}\n
     @SP
     M=M-1
@@ -490,8 +490,8 @@ class Generator:
     (END_IF)
     """
     
-    def commangt(self,command) :
-        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    def commandgt(self,command) :
+        return f"""\t//{command['type']} 
     Code assembleur de {command}\n
     @SP
     M=M-1
@@ -515,8 +515,8 @@ class Generator:
     (END_IF)
     """
     
-    def commanlt(self,command) :
-        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+    def commandlt(self,command) :
+        return f"""\t//{command['type']} 
     Code assembleur de {command}\n
     @SP
     M=M-1
@@ -541,7 +541,7 @@ class Generator:
     """
     
     def commandand(self,command) :
-        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+        return f"""\t//{command['type']} 
     Code assembleur de {command}\n
     @SP
     AM=M-1
@@ -554,7 +554,7 @@ class Generator:
     """
     
     def commandor(self,command) :
-        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+        return f"""\t//{command['type']} 
     Code assembleur de {command}\n
     @SP
     AM=M-1
@@ -567,7 +567,7 @@ class Generator:
     """
     
     def commandnot(self,command) :
-        return f"""\t//{command['type']} {command['function']} {command['parameter']}
+        return f"""\t//{command['type']} 
         Code assembleur de {command}\n
         @SP
         A=M-1
