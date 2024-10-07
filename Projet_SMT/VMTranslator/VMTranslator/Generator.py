@@ -75,9 +75,18 @@ class Generator:
                     return self.commandor(command)
                 case 'not' :
                     return self.commandnot(command)
+                case 'label' :
+                    return self.commandlabel(command)
+                case 'goto':
+                    return self.commandgoto(command)
+                case 'if-goto':
+                    return self.commandifgoto(command)
                 case _:
                     print(f'SyntaxError : {command}')
                     exit()
+
+
+
 
     def _commandpush(self, command):
         """
@@ -145,6 +154,24 @@ class Generator:
                 case _:
                     print(f'SyntaxError : {command}')
                     exit()
+
+    def commandlabel(self, command):
+        parameter = command['parameter']
+        return f"""\t//{command['type']} {command['segment']} {parameter}
+        (parameter)
+        """
+
+    def comamndgoto(self, command):
+        parameter = command['parameter']
+        return """
+        @parameter
+        0;JMP
+        """
+
+    def commandifgoto(self, command):
+        return """
+        
+        """
 
     def _commandpushconstant(self, command):
         """
