@@ -156,15 +156,13 @@ class Generator:
                     exit()
 
     def commandlabel(self, command):
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-        (parameter)
+        return f"""\t//{command['type']} 
+        ({command['label']})
         """
 
     def comamndgoto(self, command):
-        parameter = command['parameter']
-        return """
-        @parameter
+        return f"""\t//{command['type']} 
+        
         0;JMP
         """
 
