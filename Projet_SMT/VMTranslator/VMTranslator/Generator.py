@@ -160,15 +160,19 @@ class Generator:
         ({command['label']})
         """
 
-    def comamndgoto(self, command):
+    def commandgoto(self, command):
         return f"""\t//{command['type']} 
-        
+        @({command['label']})
         0;JMP
         """
 
     def commandifgoto(self, command):
-        return """
-        
+        return f"""\t//{command['type']} 
+        @SP
+        AM=M-1
+        D=M+1
+        @({command['label']})
+        D;JEQ
         """
 
     def _commandpushconstant(self, command):
