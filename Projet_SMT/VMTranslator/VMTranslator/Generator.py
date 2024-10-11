@@ -81,12 +81,13 @@ class Generator:
                     return self.commandgoto(command)
                 case 'if-goto':
                     return self.commandifgoto(command)
+                case 'Function' :
+                    return self.commandfunction(command)
+                case 'return' :
+                    return self.commandreturn(command)
                 case _:
                     print(f'SyntaxError : {command}')
                     exit()
-
-
-
 
     def _commandpush(self, command):
         """
@@ -154,6 +155,24 @@ class Generator:
                 case _:
                     print(f'SyntaxError : {command}')
                     exit()
+
+    def commandfunction(self, command):
+        TRUC = """@SP
+        A=M
+        M=0
+        @SP
+        M=M+1
+        """
+        return f"""\t//{command['type']} 
+        //
+        ({command['function']})
+
+        """+int(command['parameter'])*TRUC
+
+    def commandreturn(self, command):
+        return f"""\t//{command['type']} 
+
+        """
 
     def commandlabel(self, command):
         return f"""\t//{command['type']} 
@@ -454,8 +473,11 @@ class Generator:
         Returns:
             str: Code assembleur pour 'call function'.
         """
+         parameter = command['parameter']
          return f"""\t//{command['type']} {command['function']} {command['parameter']}
-    Code assembleur de {command}\n"""
+        Code assembleur de {command}\n
+        
+        """
     
     def commandadd(self,command) :
         return f"""\t//{command['type']}  
