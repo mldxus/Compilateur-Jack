@@ -81,7 +81,7 @@ class Generator:
                     return self.commandgoto(command)
                 case 'if-goto':
                     return self.commandifgoto(command)
-                case 'function' :
+                case 'Function' :
                     return self.commandfunction(command)
                 case 'return' :
                     return self.commandreturn(command)
@@ -161,10 +161,12 @@ class Generator:
         A=M
         M=0
         @SP
-        M=M+1"""
+        M=M+1
+        """
         return f"""\t//{command['type']} 
+        //
         ({command['function']})
-2
+
         """+int(command['parameter'])*TRUC
 
     def commandreturn(self, command):
