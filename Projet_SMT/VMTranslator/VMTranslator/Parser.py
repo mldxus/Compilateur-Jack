@@ -77,6 +77,8 @@ class Parser:
                     return self._commandfunction()
                 case 'return':
                     return self._commandreturn()
+                case 'call':
+                    return self._commandcall()
                 case _:
                     print(f'SyntaxError : {command}')
                     exit()
@@ -132,6 +134,18 @@ class Parser:
     def _commandreturn(self):
         command = self.lexer.next()
         return {'line': command['line'], 'col': command['col'], 'type': command['token']}
+    
+    def _commandcall(self):
+        command = self.lexer.next()
+        function_name = self.lexer.next()
+        num_args = self.lexer.next()
+        if function_name is None or num_args is None or function_name['type'] != 'string' or num_args['type'] != 'int':
+            print(f"SyntaxError (line={command['line']}, col={command['col']}): {command['token']}")
+            exit()
+
+        return {'line': command['line'], 'col': command['col'], 'type': 'call', 'function': function_name['token'], 'parameter': num_args['token']}
+
+    
 
 
 if __name__ == "__main__":
