@@ -2,7 +2,12 @@
 
 import sys
 import Parser
-
+from Push import PushCommand
+from Pop import PopCommand
+from Arithmetiques import AriCommand
+from Logique import LogiqueCommand
+from Branchement import BranchementCommand
+from Fonction import FonctionCommand
 
 class Generator:
     """
@@ -52,579 +57,61 @@ class Generator:
             match type:
                 # Faire une fonction par type de commande
                 case 'push':
-                    return self._commandpush(command)
+                    push_command = PushCommand(command)
+                    return push_command.executePush()
                 case 'Call':
-                    return self.commandcall(command)
+                    call_command = FonctionCommand(command)
+                    return call_command._commandcall()
                 case 'pop' :
-                    return self._commandpop(command)
+                    pop_command = PopCommand(command)
+                    return pop_command.executePop()
                 case 'add' :
-                    return self.commandadd(command)
+                    add_command = AriCommand(command)
+                    return add_command.commandadd()
                 case 'sub' :
-                    return self.commandsub(command)
+                    sub_command = AriCommand(command)
+                    return sub_command.commandsub()
                 case 'neg' :
-                    return self.commandneg(command)
+                    neg_command = AriCommand(command)
+                    return neg_command.commandneg()
                 case 'eq' :
-                    return self.commandeq(command)
+                    eq_command = LogiqueCommand(command)
+                    return eq_command.commandeq()
                 case 'gt' :
-                    return self.commandgt(command)
+                    gt_command = LogiqueCommand(command)
+                    return gt_command.commandgt()
                 case 'lt' :
-                    return self.commandlt(command)
+                    lt_command = LogiqueCommand(command)
+                    return lt_command.commandlt()
                 case 'and' :
-                    return self.commandand(command)
+                    and_command = LogiqueCommand(command)
+                    return and_command.commandand()
                 case 'or' :
-                    return self.commandor(command)
+                    or_command = LogiqueCommand(command)
+                    return or_command.commandor()
                 case 'not' :
-                    return self.commandnot(command)
+                    not_command = LogiqueCommand(command)
+                    return not_command.commandnot()
                 case 'label' :
-                    return self.commandlabel(command)
+                    label_command = BranchementCommand(command)
+                    return label_command.commandlabel()
                 case 'goto':
-                    return self.commandgoto(command)
+                    goto_command = BranchementCommand(command)
+                    return goto_command.commandgoto()
                 case 'if-goto':
-                    return self.commandifgoto(command)
+                    ifgoto_command = BranchementCommand(command)
+                    return ifgoto_command.commandifgoto()
                 case 'Function' :
-                    return self.commandfunction(command)
+                    Function_command = FonctionCommand(command)
+                    return Function_command.commandfunction()
                 case 'return' :
-                    return self.commandreturn(command)
+                    return_command = FonctionCommand(command)
+                    return return_command.commandreturn()
                 case _:
                     print(f'SyntaxError : {command}')
                     exit()
 
-    def _commandpush(self, command):
-        """
-        Génère le code assembleur pour une commande 'push'.
-        Appelle des méthodes spécifiques pour chaque type de segment.
 
-        Args:
-            command (dict): Commande VM avec ses arguments.
-
-        Returns:
-            str: Code assembleur généré pour la commande 'push'.
-        """
-        segment = command['segment']
-        # segment=local|argument|static|constant|this|that|pointer
-        match segment:
-                # Faire une fonction par type de segment
-                case 'constant':
-                    return self._commandpushconstant(command)
-                case 'local':
-                    return self._commandpushlocal(command)
-                case 'argument':
-                    return self._commandpushargument(command)
-                case 'static':
-                    return self._commandpushstatic(command)
-                case 'this':
-                    return self._commandpushthis(command)
-                case 'that':
-                    return self._commandpushthat(command)
-                case 'temp':
-                    return self._commandpushtemp(command)
-                case 'pointer':
-                    return self._commandpushpointer(command)
-                case _:
-                    print(f'SyntaxError : {command}')
-                    exit()
-            
-    def _commandpop(self, command):
-        """ Génère le code assembleur pour une commande 'pop'.
-            Appelle des méthodes spécifiques pour chaque type de segment.
-
-            Args:
-                command (dict): Commande VM avec ses arguments.
-
-            Returns:
-                str: Code assembleur généré pour la commande 'pop'.
-         """
-        segment = command['segment']
-        # segment=local|argument|static|this|that|pointer
-        match segment:
-                # Faire une fonction par type de segment
-                case 'local':
-                    return self._commandpoplocal(command)
-                case 'argument':
-                    return self._commandpopargument(command)
-                case 'static':
-                    return self._commandpopstatic(command)
-                case 'this':
-                    return self._commandpopthis(command)
-                case 'that':
-                    return self._commandpopthat(command)
-                case 'pointer':
-                    return self._commandpoppointer(command)
-                case 'temp':
-                    return self._commandpoptemp(command)
-                case _:
-                    print(f'SyntaxError : {command}')
-                    exit()
-
-    def commandfunction(self, command):
-        TRUC = """@SP
-        A=M
-        M=0
-        @SP
-        M=M+1
-        """
-        return f"""\t//{command['type']} 
-        //
-        ({command['function']})
-
-        """+int(command['parameter'])*TRUC
-
-    def commandreturn(self, command):
-        return f"""\t//{command['type']} 
-
-        """
-
-    def commandlabel(self, command):
-        return f"""\t//{command['type']} 
-        ({command['label']})
-        """
-
-    def commandgoto(self, command):
-        return f"""\t//{command['type']} 
-        @({command['label']})
-        0;JMP
-        """
-
-    def commandifgoto(self, command):
-        return f"""\t//{command['type']} 
-        @SP
-        AM=M-1
-        D=M+1
-        @({command['label']})
-        D;JEQ
-        """
-
-    def _commandpushconstant(self, command):
-        """
-        Génère le code assembleur pour 'push constant i', qui place une constante 'i' sur la pile.
-
-        Args:
-            command (dict): Contient les informations de la commande (type, segment, valeur).
-
-        Returns:
-            str: Code assembleur pour 'push constant i'.
-        """
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-        Code assembleur de {command}\n
-        @parameter
-        D=A
-        @SP
-        A=M
-        M=D
-        @SP
-        M=M+1
-        """
-    
-    def _commandpushlocal(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @LCL
-    D=M
-    @parameter
-    A=D+A
-    D=M
-    @SP
-    A=M
-    M=D
-    @SP
-    M=M+1
-    """
-    
-    def _commandpushargument(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @ARG
-    D=M
-    @parameter
-    A=D+A
-    D=M
-    @SP
-    A=M
-    M=D
-    @SP
-    M=M+1
-    """
-    
-    def _commandpushthis(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @THIS
-    D=M
-    @parameter
-    A=D+A
-    D=M
-    @SP
-    A=M
-    M=D
-    @SP
-    M=M+1
-    """
-    
-    def _commandpushthat(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @THAT
-    D=M
-    @parameter
-    A=D+A
-    D=M
-    @SP
-    A=M
-    M=D
-    @SP
-    M=M+1
-    """
-    
-    def _commandpushstatic(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @parameter
-    D=M
-    @SP
-    A=M
-    M=D
-    @SP
-    M=M+1
-    """
-    
-    def _commandpushtemp(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @5
-    D=A
-    @parameter
-    A=D+A
-    D=M
-    @SP
-    A=M
-    M=D
-    @SP
-    M=M+1
-    """
-    
-    def _commandpushpointer(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @parameter
-    D=A
-    @IF_TRUE
-    D;JEQ
-    @THAT
-    D=M
-    @SP
-    A=M
-    M=D
-    @SP
-    M=M+1
-    @END_IF
-    0;JMP
-    (IF_TRUE)
-    @THIS
-    D=M
-    @SP
-    A=M
-    M=D
-    @SP
-    M=M+1
-    (END_IF)
-    """
-    
-    def _commandpoplocal(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @LCL
-    D=M
-    @parameter
-    D=D+A
-    @R13
-    M=D
-    @SP
-    AM=M-1
-    D=M
-    @R13
-    A=M
-    M=D
-    """
-    
-    def _commandpopargument(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @ARG
-    D=M
-    @parameter
-    D=D+A
-    @R13
-    M=D
-    @SP
-    AM=M-1
-    D=M
-    @R13
-    A=M
-    M=D
-    """
-    
-    def _commandpopthis(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @THIS
-    D=M
-    @parameter
-    D=D+A
-    @R13
-    M=D
-    @SP
-    AM=M-1
-    D=M
-    @R13
-    A=M
-    M=D
-    """
-    
-    def _commandpopthat(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @THAT
-    D=M
-    @parameter
-    D=D+A
-    @R13
-    M=D
-    @SP
-    AM=M-1
-    D=M
-    @R13
-    A=M
-    M=D
-    """
-    
-    def _commandpopstatic(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @SP
-    AM=M-1
-    D=M
-    @parameter
-    M=D
-    """
-    
-    def _commandpoptemp(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @5
-    D=A
-    @parameter
-    D=D+A
-    @R13
-    M=D
-    @SP
-    AM=M-1
-    D=M
-    @R13
-    A=M
-    M=D
-    """
-    
-    def _commandpoppointer(self,command) :
-        parameter = command['parameter']
-        return f"""\t//{command['type']} {command['segment']} {parameter}
-    Code assembleur de {command}\n
-    @parameter
-    D=A
-    @IF_TRUE
-    D;JEQ
-    @SP
-    AM=M-1
-    D=M
-    @THAT
-    M=D
-    @END_IF
-    0;JMP
-    (IF_TRUE)
-    @SP
-    AM=M-1
-    D=M
-    @THIS
-    M=D
-    (END_IF)
-    """
-
-    def _commandcall(self, command):
-         """
-        Génère le code assembleur pour une commande 'call' d'une fonction avec un certain nombre
-        d'arguments.
-
-        Args:
-            command (dict): Contient les informations de la commande 'Call'.
-
-        Returns:
-            str: Code assembleur pour 'call function'.
-        """
-         parameter = command['parameter']
-         return f"""\t//{command['type']} {command['function']} {command['parameter']}
-        Code assembleur de {command}\n
-        
-        """
-    
-    def commandadd(self,command) :
-        return f"""\t//{command['type']}  
-    Code assembleur de {command}\n
-    @SP
-    M=M-1
-    A=M
-    D=M
-    A=A-1
-    M=D+M
-    """
-    
-    def commandsub(self,command) :
-        return f"""\t//{command['type']} 
-    Code assembleur de {command}\n
-    @SP
-    M=M-1
-    A=M
-    D=M
-    A=A-1
-    M=D-M
-    """
-    
-    def commandneg(self,command) :
-        return f"""\t//{command['type']} 
-    Code assembleur de {command}\n
-    @SP
-    M=M-1
-    A=M
-    D=M
-    @0
-    D=A-D
-    @SP
-    M=M-1
-    A+M
-    M+D
-    """
-
-    def commandeq(self,command) :
-        return f"""\t//{command['type']} 
-    Code assembleur de {command}\n
-    @SP
-    M=M-1
-    A=M
-    D=M
-    A=A-1
-    D=D-M
-    @IF_TRUE
-    D;JEQ
-    @SP
-    A=M
-    M=0
-    @END_IF
-    0,JMP
-    (IF_TRUE)
-    @0
-    D=A
-    @SP
-    A=M-1
-    M=D-1
-    (END_IF)
-    """
-    
-    def commandgt(self,command) :
-        return f"""\t//{command['type']} 
-    Code assembleur de {command}\n
-    @SP
-    M=M-1
-    A=M
-    D=M
-    A=A-1
-    D=D-M
-    @IF_TRUE
-    D;JGT
-    @SP
-    A=M
-    M=0
-    @END_IF
-    0,JMP
-    (IF_TRUE)
-    @0
-    D=A
-    @SP
-    A=M-1
-    M=D-1
-    (END_IF)
-    """
-    
-    def commandlt(self,command) :
-        return f"""\t//{command['type']} 
-    Code assembleur de {command}\n
-    @SP
-    M=M-1
-    A=M
-    D=M
-    A=A-1
-    D=D-M
-    @IF_TRUE
-    D;JLT
-    @SP
-    A=M
-    M=0
-    @END_IF
-    0,JMP
-    (IF_TRUE)
-    @0
-    D=A
-    @SP
-    A=M-1
-    M=D-1
-    (END_IF)
-    """
-    
-    def commandand(self,command) :
-        return f"""\t//{command['type']} 
-    Code assembleur de {command}\n
-    @SP
-    AM=M-1
-    D=M
-    @SP
-    AM=M-1
-    M=D&M
-    @SP
-    M=M+1
-    """
-    
-    def commandor(self,command) :
-        return f"""\t//{command['type']} 
-    Code assembleur de {command}\n
-    @SP
-    AM=M-1
-    D=M
-    @SP
-    AM=M-1
-    M=D|M
-    @SP
-    M=M+1
-    """
-    
-    def commandnot(self,command) :
-        return f"""\t//{command['type']} 
-        Code assembleur de {command}\n
-        @SP
-        A=M-1
-        M=!M
-        """
-    
 if __name__ == '__main__':
     file = sys.argv[1]
     print('-----debut')
