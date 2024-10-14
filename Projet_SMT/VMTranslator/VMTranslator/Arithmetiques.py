@@ -7,7 +7,7 @@ class AriCommand :
 
     def commandadd(self):
         return f"""\t//{self.command['type']}  
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @SP
     M=M-1
     A=M
@@ -18,7 +18,7 @@ class AriCommand :
 
     def commandsub(self):
         return f"""\t//{self.command['type']} 
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @SP
     M=M-1
     A=M
@@ -29,7 +29,7 @@ class AriCommand :
 
     def commandneg(self):
         return f"""\t//{self.command['type']} 
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @SP
     M=M-1
     A=M
