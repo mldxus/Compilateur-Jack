@@ -36,6 +36,6 @@ class FonctionCommand :
        """
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['function']} {self.command['parameter']}
-        Code assembleur de {self.command}\n
+        //Code assembleur de {self.command}\n
 
         """
