@@ -14,7 +14,7 @@ class BranchementCommand :
     def commandgoto(self):
         return f"""\t//{self.command['type']} 
         //Code assembleur de {self.command}\n
-        @({self.command['label']})
+        @{self.command['label']}
         0;JMP
         """
 
@@ -24,6 +24,6 @@ class BranchementCommand :
         @SP
         AM=M-1
         D=M+1
-        @({self.command['label']})
-        D;JEQ
+        @{self.command['label']}
+        D;JNE
         """
