@@ -31,7 +31,8 @@ class PushCommand :
         parameter = self.command['parameter']
         return f"""
         // push constant {parameter}
-        Code assembleur de {self.command}\n
+        //
+Code assembleur de {self.command}\n
         @{parameter}
         D=A
         @SP
@@ -44,7 +45,7 @@ class PushCommand :
     def _commandpushlocal(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @LCL
     D=M
     @{parameter}
@@ -60,7 +61,7 @@ class PushCommand :
     def _commandpushargument(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @ARG
     D=M
     @{parameter}
@@ -76,7 +77,7 @@ class PushCommand :
     def _commandpushthis(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @THIS
     D=M
     @{parameter}
@@ -92,7 +93,7 @@ class PushCommand :
     def _commandpushthat(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @THAT
     D=M
     @{parameter}
@@ -108,7 +109,7 @@ class PushCommand :
     def _commandpushstatic(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @{parameter}
     D=M
     @SP
@@ -121,7 +122,7 @@ class PushCommand :
     def _commandpushtemp(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @5
     D=A
     @{parameter}
@@ -137,7 +138,7 @@ class PushCommand :
     def _commandpushpointer(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @{parameter}
     D=A
     @IF_TRUE

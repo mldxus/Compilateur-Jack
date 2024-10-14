@@ -6,14 +6,14 @@ class PopCommand :
         self.command = command
 
     def executePop(self):
-        """ Génère le code assembleur pour une commande 'pop'.
+        """ Génère le //code assembleur pour une commande 'pop'.
             Appelle des méthodes spécifiques pour chaque type de segment.
 
             Args:
                 command (dict): Commande VM avec ses arguments.
 
             Returns:
-                str: Code assembleur généré pour la commande 'pop'.
+                str: //Code assembleur généré pour la commande 'pop'.
          """
         segment = self.command['segment']
         # segment=local|argument|static|this|that|pointer
@@ -39,7 +39,7 @@ class PopCommand :
     def _commandpoplocal(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @LCL
     D=M
     @{parameter}
@@ -57,7 +57,7 @@ class PopCommand :
     def _commandpopargument(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @ARG
     D=M
     @{parameter}
@@ -75,7 +75,7 @@ class PopCommand :
     def _commandpopthis(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @THIS
     D=M
     @{parameter}
@@ -93,7 +93,7 @@ class PopCommand :
     def _commandpopthat(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @THAT
     D=M
     @{parameter}
@@ -111,7 +111,7 @@ class PopCommand :
     def _commandpopstatic(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @SP
     AM=M-1
     D=M
@@ -122,7 +122,7 @@ class PopCommand :
     def _commandpoptemp(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @5
     D=A
     @{parameter}
@@ -140,7 +140,7 @@ class PopCommand :
     def _commandpoppointer(self):
         parameter = self.command['parameter']
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @{parameter}
     D=A
     @IF_TRUE

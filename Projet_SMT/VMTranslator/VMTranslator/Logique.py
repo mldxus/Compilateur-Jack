@@ -7,7 +7,7 @@ class LogiqueCommand :
 
     def commandeq(self):
         return f"""\t//{self.command['type']} 
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @SP
     M=M-1
     A=M
@@ -32,7 +32,7 @@ class LogiqueCommand :
 
     def commandgt(self):
         return f"""\t//{self.command['type']} 
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @SP
     M=M-1
     A=M
@@ -57,7 +57,7 @@ class LogiqueCommand :
 
     def commandlt(self):
         return f"""\t//{self.command['type']} 
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @SP
     M=M-1
     A=M
@@ -82,7 +82,7 @@ class LogiqueCommand :
 
     def commandand(self):
         return f"""\t//{self.command['type']} 
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @SP
     AM=M-1
     D=M
@@ -95,7 +95,7 @@ class LogiqueCommand :
 
     def commandor(self):
         return f"""\t//{self.command['type']} 
-    Code assembleur de {self.command}\n
+    //Code assembleur de {self.command}\n
     @SP
     AM=M-1
     D=M
@@ -108,7 +108,7 @@ class LogiqueCommand :
 
     def commandnot(self):
         return f"""\t//{self.command['type']} 
-        Code assembleur de {self.command}\n
+        //Code assembleur de {self.command}\n
         @SP
         A=M-1
         M=!M
