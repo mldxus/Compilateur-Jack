@@ -53,14 +53,14 @@ class Translator:
         Returns:
             str: Le code assembleur de démarrage (bootstrap).
         """
-        init = Generator.Generator()._commandcall({'type': 'Call', 'function': 'Sys.init', 'parameter': '0'})
+        #init = Generator.Generator()._commandcall({'type': 'Call', 'function': 'Sys.init', 'parameter': '0'})
 
         return f"""// Bootstrap
     @256
     D=A
     @SP
     M=D
-{init}
+
 """
 
 
