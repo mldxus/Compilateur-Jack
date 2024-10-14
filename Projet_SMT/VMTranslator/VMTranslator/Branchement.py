@@ -7,20 +7,20 @@ class BranchementCommand :
 
     def commandlabel(self):
         return f"""\t//{self.command['type']} 
-        Code assembleur de {self.command}\n
+        //Code assembleur de {self.command}\n
         ({self.command['label']})
         """
 
     def commandgoto(self):
         return f"""\t//{self.command['type']} 
-        Code assembleur de {self.command}\n
+        //Code assembleur de {self.command}\n
         @({self.command['label']})
         0;JMP
         """
 
     def commandifgoto(self):
         return f"""\t//{self.command['type']} 
-        Code assembleur de {self.command}\n
+        //Code assembleur de {self.command}\n
         @SP
         AM=M-1
         D=M+1

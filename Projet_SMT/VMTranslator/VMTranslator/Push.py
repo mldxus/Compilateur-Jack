@@ -31,8 +31,7 @@ class PushCommand :
         parameter = self.command['parameter']
         return f"""
         // push constant {parameter}
-        //
-Code assembleur de {self.command}\n
+        //Code assembleur de {self.command}\n
         @{parameter}
         D=A
         @SP
