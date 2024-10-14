@@ -19,9 +19,70 @@ class FonctionCommand :
         """ + int(self.command['parameter']) * TRUC
 
     def commandreturn(self):
-        return f"""\t//{self.command['type']} 
-
         """
+        Génère le code assembleur pour une commande 'return'. Cela retourne d'une fonction en
+        restaurant l'état de l'appelant.
+
+        Returns:
+            str: Code assembleur généré pour la commande 'return'.
+        """
+        return f"""\t// return
+
+        // Sauvegarder FRAME = LCL
+        @LCL
+        D=M
+        @R13
+        M=D
+
+        // RET = *(FRAME - 5)
+        @5
+        A=D-A
+        D=M
+        @R14
+        M=D
+
+        // *ARG = pop()
+        @SP
+        AM=M-1
+        D=M
+        @ARG
+        A=M
+        M=D
+
+        // SP = ARG + 1
+        @ARG
+        D=M+1
+        @SP
+        M=D
+
+        // Restaurer THAT, THIS, ARG, LCL
+        @R13
+        AM=M-1
+        D=M
+        @THAT
+        M=D
+        @R13
+        AM=M-1
+        D=M
+        @THIS
+        M=D
+        @R13
+        AM=M-1
+        D=M
+        @ARG
+        M=D
+        @R13
+        AM=M-1
+        D=M
+        @LCL
+        M=D
+
+        // Retour à l'appelant (GOTO RET)
+        @R14
+        A=M
+        0;JMP
+        """
+
 
     def _commandcall(self):
         """
