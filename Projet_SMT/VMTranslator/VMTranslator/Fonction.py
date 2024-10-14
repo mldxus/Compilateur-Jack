@@ -82,21 +82,54 @@ class FonctionCommand :
         A=M
         0;JMP
         """
-
-
+        
+        
     def _commandcall(self):
         """
-       Génère le code assembleur pour une commande 'call' d'une fonction avec un certain nombre
-       d'arguments.
-
-       Args:
-           command (dict): Contient les informations de la commande 'Call'.
-
-       Returns:
-           str: Code assembleur pour 'call function'.
-       """
-        parameter = self.command['parameter']
-        return f"""\t//{self.command['type']} {self.command['function']} {self.command['parameter']}
-        //Code assembleur de {self.command}\n
-
+        Génère le code assembleur pour une commande 'call' d'une fonction avec un certain nombre
+        d'arguments.
+        Returns:
+            str: Code assembleur généré pour l'appel de la fonction.
         """
+        return_label = f"RETURN_LABEL_{self.return_label_count}"
+        self.return_label_count += 1
+        function_name = self.command['function']
+        num_args = self.command['parameter']
+        result = []
+        
+        # Sauvegarder l'adresse de retour
+        result.append(f"@{return_label}")
+        result.append("D=A")
+        result.append("@SP")
+        result.append("A=M")
+        result.append("M=D")
+        result.append("@SP")
+        result.append("M=M+1")
+        # Sauvegarder LCL, ARG, THIS, THAT
+        for register in ["LCL", "ARG", "THIS", "THAT"]:
+            result.append(f"@{register}")
+            result.append("D=M")
+            result.append("@SP")
+            result.append("A=M")
+            result.append("M=D")
+            result.append("@SP")
+            result.append("M=M+1")
+        # ARG = SP - n - 5
+        result.append("@SP")
+        result.append("D=M")
+        result.append(f"@{int(num_args) + 5}")
+        result.append("D=D-A")
+        result.append("@ARG")
+        result.append("M=D")
+        # LCL = SP
+        result.append("@SP")
+        result.append("D=M")
+        result.append("@LCL")
+        result.append("M=D")
+        # Goto function
+        result.append(f"@{function_name}")
+        result.append("0;JMP")
+        # Label de retour
+        result.append(f"({return_label})")
+        
+        return "\n".join(result)
