@@ -70,7 +70,7 @@ class LogiqueCommand :
     A=M
     M=0
     @END_IF
-    0,JMP
+    0;JMP
     (IF_TRUE)
     @0
     D=A
