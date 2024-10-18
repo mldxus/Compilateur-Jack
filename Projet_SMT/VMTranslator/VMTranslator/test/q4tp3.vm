@@ -1,0 +1,31 @@
+// Noircir tout l'écran
+
+// Initialiser SP à 256 et THIS à 16384 (adresse de début de l'écran)
+Function Main 0
+push constant 256    // SP = 256
+pop pointer 0        // Stocker dans THIS
+push constant 16384  // THIS = 16384
+pop pointer 0
+
+// Définir la boucle principale
+label Loop
+    // Charger l'adresse actuelle dans THIS et noircir 16 pixels
+    push pointer 0       // Charger l'adresse de l'écran actuelle (THIS)
+    push constant 32767   // Valeur maximale (noircir les 16 pixels)
+    pop that 0            // Écrire sur l'écran à l'adresse THIS
+
+    // Passer à l'adresse suivante
+    push pointer 0        // Charger l'adresse actuelle
+    push constant 1       // Incrémenter de 1
+    add
+    pop pointer 0         // Mettre à jour THIS avec la nouvelle adresse
+
+    // Vérifier si toute la mémoire de l'écran a été remplie
+    push pointer 0
+    push constant 24576   // Adresse de fin de l'écran (16384 + 8192)
+    lt                    // Comparer si THIS < 24576
+    if-goto Loop          // Si oui, reboucler
+
+// Fin du programme
+label End
+goto End
