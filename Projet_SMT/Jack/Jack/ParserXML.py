@@ -15,7 +15,12 @@ class ParserXML:
         class: 'class' className '{' classVarDec* subroutineDec* '}'
         """
         self.xml.write(f"""<class>\n""")
-        """todo"""
+        self.process('class')
+        self.className()
+        self.process('{')
+        while self.lexer.hasNext() and self.lexer.look()['token'] in {'static','field'} :
+            self.classVarDec()
+        self.process('}')
         self.xml.write(f"""</class>\n""")
 
     def classVarDec(self):
@@ -31,7 +36,13 @@ class ParserXML:
         type: 'int'|'char'|'boolean'|className
         """
         self.xml.write(f"""<type>\n""")
-        """todo"""
+        if self.lexer.hasNext('classvardec') and self.lexer.look()['token'] in {'int','',''} :
+            token = self.lexer.token()
+            self.xlm.write(token['token'])
+        elif self.lexer.hasNext() and self.lexer.look()['type'] == 'identifier' :
+            self.classname()
+        else :
+            self.error(self.lexer.next())
         self.xml.write(f"""</type>\n""")
 
     def subroutineDec(self):
@@ -64,7 +75,18 @@ class ParserXML:
         varDec: 'var' type varName (',' varName)* ';'
         """
         self.xml.write(f"""<varDec>\n""")
-        """todo"""
+        if self.lexer.hasNext('classvardec') and self.lexer.look()['token'] in {'static','field'} :
+            token = self.lexer.token()
+            self.xlm.write(f"""<keyword>{token['token']}</keyword>\n""")
+        else :
+            self.error(self.lexer.next())
+        self.type()
+        self.varname()
+        while self.lexer.hasNext() and self.lexer.look()['token'] == ',' :
+            self.process(',')
+            self.varname()
+        self.process(',')
+        self.xml.write(f"""<type>\n""")
         self.xml.write(f"""</varDec>\n""")
 
     def className(self):
@@ -72,7 +94,11 @@ class ParserXML:
         className: identifier
         """
         self.xml.write(f"""<className>""")
-        """todo"""
+        token = self.lexer.next()
+        if token['type'] == 'identifier' :
+            self.xlm.write(token['token'])
+        else :
+            self.error(token)
         self.xml.write(f"""</className>""")
 
     def subroutineName(self):
@@ -88,7 +114,11 @@ class ParserXML:
         varName: identifier
         """
         self.xml.write(f"""<varName>\n""")
-        """todo"""
+        token = self.lexer.next()
+        if token['type'] == 'identifier' :
+            self.xlm.write(token['token'])
+        else :
+            self.error(token)
         self.xml.write(f"""</varName>\n""")
 
     def statements(self):
