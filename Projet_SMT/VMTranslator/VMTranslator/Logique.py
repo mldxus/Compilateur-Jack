@@ -40,7 +40,7 @@ class LogiqueCommand :
     A=A-1
     D=D-M
     @IF_TRUE
-    D;JGT
+    D;JLT
     @SP
     A=M
     M=0
@@ -65,7 +65,7 @@ class LogiqueCommand :
     A=A-1
     D=D-M
     @IF_TRUE
-    D;JLT
+    D;JGT
     @SP
     A=M
     M=0
