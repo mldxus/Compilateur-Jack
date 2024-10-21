@@ -1,9 +1,11 @@
 import Parser
 import sys
+from LabelGenerator import LabelGenerator
 
 class PushCommand :
     def __init__(self, command):
         self.command = command
+        self.label_generator = LabelGenerator()
 
     def executePush(self):
         segment = self.command['segment']
@@ -136,11 +138,13 @@ class PushCommand :
 
     def _commandpushpointer(self):
         parameter = self.command['parameter']
+        IF_TRUE = self.label_generator.generate_label('IF_TRUE')
+        END_IF = self.label_generator.generate_label('END_IF')
         return f"""\t//{self.command['type']} {self.command['segment']} {parameter}
     //Code assembleur de {self.command}\n
     @{parameter}
     D=A
-    @IF_TRUE
+    @{IF_TRUE}
     D;JEQ
     @THAT
     D=M
@@ -149,9 +153,9 @@ class PushCommand :
     M=D
     @SP
     M=M+1
-    @END_IF
+    @{END_IF}
     0;JMP
-    (IF_TRUE)
+    ({IF_TRUE})
     @THIS
     D=M
     @SP
@@ -159,5 +163,5 @@ class PushCommand :
     M=D
     @SP
     M=M+1
-    (END_IF)
+    ({END_IF})
     """
