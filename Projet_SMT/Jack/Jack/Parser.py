@@ -13,7 +13,16 @@ class Parser:
         """
         class: 'class' className '{' classVarDec* subroutineDec* '}'
         """
-        return 'Todo'
+        line=self.lexer.look()['line']
+        col=self.lexer.look()['col']
+        self.process('class')
+        className=self.className()
+        self.process('{')
+        #while self.lexer.hasNext() and self.lexer.look()['token'] in {'static', 'field'}:
+            #self.classVarDec()
+        self.process('}')
+
+        return {'line':line,'col':col,'type':'class','name':className,'vardec':[],'subroutine':[]}
 
     def classVarDec(self):
         """
@@ -56,7 +65,14 @@ class Parser:
         """
         className: identifier
         """
-        return 'Todo'
+
+        token = self.lexer.next()
+        if token['type'] == 'identifier':
+            return token
+        else:
+            self.error(token)
+
+
 
     def subroutineName(self):
         """
