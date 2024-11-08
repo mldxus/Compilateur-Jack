@@ -28,7 +28,13 @@ class ParserXML:
         classVarDec: ('static'| 'field') type varName (',' varName)* ';'
         """
         self.xml.write(f"""<classVarDec>\n""")
-
+        self.process(self.lexer.look()['token'])
+        self.type()
+        self.varName()
+        while self.lexer.look()['token'] == ',' :
+            self.process(',')
+            self.varName()
+        self.process(';')
         self.xml.write(f"""</classVarDec>\n""")
 
     def type(self):
@@ -51,7 +57,23 @@ class ParserXML:
         subroutineName '(' parameterList ')' subroutineBody
         """
         self.xml.write(f"""<subroutineDec>\n""")
-        """todo"""
+        token = self.lexer.token()
+        match token['keyword'] :
+            case 'constructor' :
+                self.process('constructor')
+            case 'function' :
+                self.process('function')
+            case 'method' :
+                self.process('method')
+        if token['keyword'] != 'void' :
+            self.process('void')
+        else :
+            self.type()
+        self.subroutineName()
+        self.process('(')
+        self.parameterList()
+        self.process(')')
+        self.subroutineBody()
         self.xml.write(f"""</subroutineDec>\n""")
 
     def parameterList(self):
@@ -59,7 +81,13 @@ class ParserXML:
         parameterList: ((type varName) (',' type varName)*)?
         """
         self.xml.write(f"""<parameterList>\n""")
-
+        while self.lexer.look()['token'] in {'int','boolean','className'} :
+            self.type()
+            self.varName()
+        while self.lexer.look()['token'] == ',' :
+            self.process(',')
+            self.type()
+            self.varName()
         self.xml.write(f"""</parameterList>\n""")
 
     def subroutineBody(self):
@@ -67,7 +95,11 @@ class ParserXML:
         subroutineBody: '{' varDec* statements '}'
         """
         self.xml.write(f"""<subroutineBody>\n""")
-        """todo"""
+        self.process('{')
+        while self.lexer.hasNext() and self.lexer.look()['token'] in {'static','field'} :
+            self.varDec()
+        self.statements()
+        self.process(';')
         self.xml.write(f"""</subroutineBody>\n""")
 
     def varDec(self):
@@ -85,7 +117,7 @@ class ParserXML:
         while self.lexer.hasNext() and self.lexer.look()['token'] == ',' :
             self.process(',')
             self.varName()
-        self.process(',')
+        self.process(';')
         self.xml.write(f"""<type>\n""")
         self.xml.write(f"""</varDec>\n""")
 
@@ -106,7 +138,11 @@ class ParserXML:
         subroutineName: identifier
         """
         self.xml.write(f"""<subroutineName>""")
-        """todo"""
+        token = self.lexer.next()
+        if token['type'] == 'identifier' :
+            self.xml.write(token['token'])
+        else :
+            self.error(token)
         self.xml.write(f"""</subroutineName>""")
 
     def varName(self):
@@ -126,7 +162,8 @@ class ParserXML:
         statements : statements*
         """
         self.xml.write(f"""<statements>\n""")
-        self.statement()
+        while self.lexer.hasNext() and self.lexer.look()['token'] in {'let','if','while','do','return'}:
+            self.statement()
         self.xml.write(f"""</statements>\n""")
 
     def statement(self):
@@ -134,8 +171,17 @@ class ParserXML:
         statement : letStatements|ifStatement|whileStatement|doStatement|returnStatement
         """
         self.xml.write(f"""<statement>\n""")
-        if self.lexer.look()['token'] == 'let':
-            self.letStatement()
+        match self.lexer.look()['token']:
+            case 'if' :
+                self.ifStatement()
+            case 'let':
+                self.letStatement()
+            case 'while':
+                self.whileStatement()
+            case 'do':
+                self.doStatement()
+            case 'return':
+                self.returnStatement()
         self.xml.write(f"""</statement>\n""")
 
     def letStatement(self):
@@ -159,7 +205,17 @@ class ParserXML:
         ifStatement : 'if' '(' expression ')' '{' statements '}' ('else' '{' statements '}')?
         """
         self.xml.write(f"""<ifStatement>\n""")
-        """todo"""
+        self.process('if')
+        self.process('(')
+        self.expression()
+        self.process(')')
+        self.process('{')
+        self.statements()
+        self.process('}')
+        if self.lexer.look()['token'] == 'else':
+            self.process('{')
+            self.statements()
+            self.process('}')
         self.xml.write(f"""</ifStatement>\n""")
 
     def whileStatement(self):
@@ -167,7 +223,13 @@ class ParserXML:
         whileStatement : 'while' '(' expression ')' '{' statements '}'
         """
         self.xml.write(f"""<whileStatement>\n""")
-        """todo"""
+        self.process('while')
+        self.process('(')
+        self.expression()
+        self.process(')')
+        self.process('{')
+        self.statements()
+        self.process('}')
         self.xml.write(f"""</whileStatement>\n""")
 
     def doStatement(self):
@@ -175,7 +237,9 @@ class ParserXML:
         doStatement : 'do' subroutineCall ';'
         """
         self.xml.write(f"""<doStatement>\n""")
-        """todo"""
+        self.process('do')
+        self.subroutineBody()
+        self.process(';')
         self.xml.write(f"""</doStatement>\n""")
 
     def returnStatement(self):
@@ -183,7 +247,11 @@ class ParserXML:
         returnStatement : 'return' expression? ';'
         """
         self.xml.write(f"""<returnStatement>\n""")
-        """todo"""
+        self.process('return')
+        if self.lexer.look2()['token'] == ';':
+            self.expression()
+        self.process(';')
+
         self.xml.write(f"""</returnStatement>\n""")
 
     def expression(self):
@@ -192,7 +260,8 @@ class ParserXML:
         """
         self.xml.write(f"""<expression>\n""")
         self.term()
-        if self.lexer.look()['token'] == '+' or self.lexer.look()['token'] == '-' or self.lexer.look()['token'] == '=' or self.lexer.look()['token'] == '>' or self.lexer.look()['token'] == '>' or  :
+        while self.lexer.look()['token'] in {'+','-','=','>','<','*','/','&','|'} :
+            self.process(self.lexer.next())
             self.term()
         self.xml.write(f"""</expression>\n""")
 
@@ -203,7 +272,27 @@ class ParserXML:
                 | '(' expression ')' | unaryOp term
         """
         self.xml.write(f"""<term>\n""")
-        """todo"""
+        token = self.lexer.next()
+        if token['type'] == 'integerConstant' :
+            self.xml.write(token['token'])
+        elif token['type'] == 'stringConstant' :
+            self.xml.write(token['token'])
+        elif self.lexer.look()['token'] in {'true','false','null','this'} :
+            self.KeywordConstant()
+        elif self.lexer.look()['token'] in {'static','field'} :
+            self.varName()
+            if self.lexer.look()['token'] == '(':
+                self.process('(')
+                self.expression()
+                self.process(')')
+        elif self.lexer.look()['token'] in {'-','~'}:
+            self.unaryOp()
+        elif self.lexer.look()['token'] == '(':
+            self.process('(')
+            self.expression()
+            self.process(')')
+        else :
+            self.subroutineCall()
         self.xml.write(f"""</term>\n""")
 
     def subroutineCall(self):
@@ -214,7 +303,19 @@ class ParserXML:
             Nous utiliserons la balise <classvarName> pour (className|varName)
         """
         self.xml.write(f"""<subroutineCall>\n""")
-        """todo"""
+        if self.lexer.look2()['token'] == '.':
+            self.xml.write(f"""<classvarName>\n""")
+            self.process('.')
+            self.subroutineName()
+            self.process('(')
+            self.expressionList()
+            self.process(')')
+            self.xml.write(f"""</classvarName>\n""")
+        else :
+            self.subroutineName()
+            self.process('(')
+            self.expressionList()
+            self.process(')')
         self.xml.write(f"""</subroutineCall>\n""")
 
     def expressionList(self):
@@ -230,7 +331,7 @@ class ParserXML:
         op : '+'|'-'|'*'|'/'|'&'|'|'|'<'|'>'|'='
         """
         self.xml.write(f"""<op>\n""")
-        """todo"""
+        self.process(self.lexer.look()['token'])
         self.xml.write(f"""</op>\n""")
 
     def unaryOp(self):
@@ -238,7 +339,7 @@ class ParserXML:
         unaryop : '-'|'~'
         """
         self.xml.write(f"""<unaryop>\n""")
-        """todo"""
+        self.process(self.lexer.look()['token'])
         self.xml.write(f"""</unaryop>\n""")
 
     def KeywordConstant(self):
@@ -246,7 +347,15 @@ class ParserXML:
         KeyWordConstant : 'true'|'false'|'null'|'this'
         """
         self.xml.write(f"""<KeyWordConstant>\n""")
-        """todo"""
+        match self.lexer.look()['token']:
+            case 'true':
+                self.process('true')
+            case 'false':
+                self.process('false')
+            case 'null':
+                self.process('null')
+            case 'this':
+                self.process('this')
         self.xml.write(f"""</KeyWordConstant>\n""")
 
     def process(self, str):
