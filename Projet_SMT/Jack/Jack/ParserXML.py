@@ -15,11 +15,14 @@ class ParserXML:
         class: 'class' className '{' classVarDec* subroutineDec* '}'
         """
         self.xml.write(f"""<class>\n""")
+        token = self.lexer.next()
         self.process('class')
         self.className()
         self.process('{')
         while self.lexer.hasNext() and self.lexer.look()['token'] in {'static','field'} :
             self.classVarDec()
+        while self.lexer.hasNext() and token['keyword'] in {'constructor','function','method'} :
+            self.subroutineDec()
         self.process('}')
         self.xml.write(f"""</class>\n""")
 
@@ -384,5 +387,5 @@ if __name__ == "__main__":
     file = sys.argv[1]
     print('-----debut')
     parser = ParserXML(file)
-    parser.letStatement()
+    parser.jackclass()
     print('-----fin')
