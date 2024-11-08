@@ -284,7 +284,6 @@ class ParserXML:
             self.process('[')
             self.expression()
             self.process(']')
-
         elif self.lexer.look()['token'] in {'-','~'}: #unaryOp term
             self.unaryOp()
             self.term()
@@ -292,7 +291,7 @@ class ParserXML:
             self.process('(')
             self.expression()
             self.process(')')
-        elif self.lexer.look2()['token'] in ('(','.') : #subroutineCall
+        elif self.lexer.look2()['token'] in {'(','.'} : #subroutineCall
             self.subroutineCall()
         else : #varName
             self.varName()
@@ -327,10 +326,11 @@ class ParserXML:
         """
         self.xml.write(f"""<expressionList>\n""")
         token = self.lexer.next()
-        self.expression()
-        while self.lexer.hasNext() and self.lexer.look()['token'] == ',':
-            self.process(',')
+        if token['type'] in {'integerConstant','stringConstant'} or self.lexer.look()['token'] in {'true','false','null','this'} or self.lexer.look2()['token'] in {'[','(','.'} or self.lexer.look()['token'] in {'-','~','('} or token['type'] == 'identifier' :
             self.expression()
+            while self.lexer.hasNext() and self.lexer.look()['token'] == ',':
+                self.process(',')
+                self.expression()
         self.xml.write(f"""</expressionList>\n""")
 
     def op(self):
