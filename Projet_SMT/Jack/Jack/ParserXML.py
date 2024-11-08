@@ -273,26 +273,29 @@ class ParserXML:
         """
         self.xml.write(f"""<term>\n""")
         token = self.lexer.next()
-        if token['type'] == 'integerConstant' :
+        if token['type'] == 'integerConstant' : #integerConstant
             self.xml.write(token['token'])
-        elif token['type'] == 'stringConstant' :
+        elif token['type'] == 'stringConstant' : #stringConstant
             self.xml.write(token['token'])
-        elif self.lexer.look()['token'] in {'true','false','null','this'} :
+        elif self.lexer.look()['token'] in {'true','false','null','this'} : #keywordConstant
             self.KeywordConstant()
-        elif self.lexer.look()['token'] in {'static','field'} :
+        elif self.lexer.look2()['token'] == '[' : #varName '[' expression ']'
             self.varName()
-            if self.lexer.look()['token'] == '(':
-                self.process('(')
-                self.expression()
-                self.process(')')
-        elif self.lexer.look()['token'] in {'-','~'}:
+            self.process('[')
+            self.expression()
+            self.process(']')
+
+        elif self.lexer.look()['token'] in {'-','~'}: #unaryOp term
             self.unaryOp()
-        elif self.lexer.look()['token'] == '(':
+            self.term()
+        elif self.lexer.look()['token'] == '(': #'(' expression ')'
             self.process('(')
             self.expression()
             self.process(')')
-        else :
+        elif self.lexer.look2()['token'] in ('(','.') : #subroutineCall
             self.subroutineCall()
+        else : #varName
+            self.varName()
         self.xml.write(f"""</term>\n""")
 
     def subroutineCall(self):
@@ -323,7 +326,11 @@ class ParserXML:
         expressionList : (expression (',' expression)*)?
         """
         self.xml.write(f"""<expressionList>\n""")
-        """todo"""
+        token = self.lexer.next()
+        self.expression()
+        while self.lexer.hasNext() and self.lexer.look()['token'] == ',':
+            self.process(',')
+            self.expression()
         self.xml.write(f"""</expressionList>\n""")
 
     def op(self):
