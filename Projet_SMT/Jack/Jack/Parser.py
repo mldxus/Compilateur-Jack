@@ -22,13 +22,27 @@ class Parser:
             #self.classVarDec()
         self.process('}')
 
-        return {'line':line,'col':col,'type':'class','name':className,'vardec':[],'subroutine':[]}
+        return {'line':line,'col':col,'type':'class','name':className,'vardec':[self.classVarDec()],'subroutine':[self.subroutineDec()]}
 
     def classVarDec(self):
         """
         classVarDec: ('static'| 'field') type varName (',' varName)* ';'
         """
-        return 'Todo'
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        if self.lexer.look()['token'] == 'static' :
+            kind = 'static'
+        else :
+            kind = 'this'
+        self.process(self.lexer.look()['token'])
+        type = self.type()
+        varName = []
+        varName.append(self.varName())
+        while self.lexer.look()['token'] == ',':
+            self.process(',')
+            varName.append(self.varName())
+        self.process(';')
+        return {'line':line, 'col':col, 'name':varName, 'kind':kind, 'type':type}
 
     def type(self):
         """
@@ -42,7 +56,26 @@ class Parser:
         subroutineDec: ('constructor'| 'function'|'method') ('void'|type)
         subroutineName '(' parameterList ')' subroutineBody
         """
-        return 'Todo'
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        token = self.lexer.token()
+        match token['keyword']:
+            case 'constructor':
+                type = self.process('constructor')
+            case 'function':
+                type = self.process('function')
+            case 'method':
+                type = self.process('method')
+        if token['keyword'] == 'void':
+            retourne = self.process('void')
+        else:
+            retourne = self.type()
+        name = self.subroutineName()
+        self.process('(')
+        self.parameterList()
+        self.process(')')
+        self.subroutineBody()
+        return {'line':line, 'col':col, 'type':type, 'return':retourne, 'name':name, 'argument':[], 'local': [] 'instructions':[self.statements()]}
 
     def parameterList(self):
         """
@@ -90,49 +123,109 @@ class Parser:
         """
         statements : statements*
         """
+        while self.lexer.hasNext() and self.lexer.look()['token'] in {'let','if','while','do','return'}:
+            self.statement()
         return 'Todo'
 
     def statement(self):
         """
         statement : letStatements|ifStatement|whileStatement|doStatement|returnStatement
         """
+        match self.lexer.look()['token']:
+            case 'if':
+                self.ifStatement()
+            case 'let':
+                self.letStatement()
+            case 'while':
+                self.whileStatement()
+            case 'do':
+                self.doStatement()
+            case 'return':
+                self.returnStatement()
         return 'Todo'
 
     def letStatement(self):
         """
         letStatement : 'let' varName ('[' expression ']')? '=' expression ';'
         """
-        return 'Todo'
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        self.process('let')
+        variable = self.varName()
+        if self.lexer.look()['token'] == '[':
+            self.process('[')
+            indice = self.expression()
+            self.process(']')
+        self.process('=')
+        valeur = self.expression()
+        self.process(';')
+        return {'line':line, 'col':col, 'type':'let', 'variable':variable, 'indice':indice, 'valeur':valeur}
 
     def ifStatement(self):
         """
         ifStatement : 'if' '(' expression ')' '{' statements '}' ('else' '{' statements '}')?
         """
-        return 'Todo'
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        self.process('if')
+        self.process('(')
+        cond = self.expression()
+        self.process(')')
+        self.process('{')
+        vrai = self.statements()
+        self.process('}')
+        if self.lexer.look()['token'] == 'else':
+            self.process('else')
+            self.process('{')
+            faux = self.statements()
+            self.process('}')
+        return {'line':line, 'col':col, 'type':'if', 'condition':cond, 'true':[vrai], 'false':[faux]}
 
     def whileStatement(self):
         """
         whileStatement : 'while' '(' expression ')' '{' statements '}'
         """
-        return 'Todo'
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        self.process('while')
+        self.process('(')
+        cond = self.expression()
+        self.process(')')
+        self.process('{')
+        inst = self.statements()
+        self.process('}')
+        return {'line':line, 'col':col, 'type':'while', 'condition':cond, 'instructions':[inst]}
 
     def doStatement(self):
         """
         doStatement : 'do' subroutineCall ';'
         """
-        return 'Todo'
+        self.process('do')
+        self.subroutineCall()
+        self.process(';')
+        return ''
 
     def returnStatement(self):
         """
         returnStatement : 'return' expression? ';'
         """
-        return 'Todo'
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        self.process('return')
+        if self.lexer.look2()['token'] == ';':
+            valeur = self.expression()
+        return {'line':line, 'col':col, 'type':'return', 'valeur':valeur}
 
     def expression(self):
         """
         expression : term (op term)*
         """
-        return 'Todo'
+        expression = []
+        expression.append(self.term())
+        while self.lexer.look()['token'] in {'+', '-', '=', '>', '<', '*', '/', '&', '|'}:
+            expression.append(self.op())
+            expression.append(self.term())
+        return expression
 
     def term(self):
         """
