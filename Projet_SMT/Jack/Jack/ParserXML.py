@@ -15,13 +15,13 @@ class ParserXML:
         class: 'class' className '{' classVarDec* subroutineDec* '}'
         """
         self.xml.write(f"""<class>\n""")
-        token = self.lexer.next()
+        token = self.lexer.look()
         self.process('class')
         self.className()
         self.process('{')
         while self.lexer.hasNext() and self.lexer.look()['token'] in {'static','field'} :
             self.classVarDec()
-        while self.lexer.hasNext() and token['keyword'] in {'constructor','function','method'} :
+        while self.lexer.hasNext() and self.lexer.look()['token'] in {'constructor','function','method'} :
             self.subroutineDec()
         self.process('}')
         self.xml.write(f"""</class>\n""")
@@ -46,7 +46,7 @@ class ParserXML:
         """
         self.xml.write(f"""<type>\n""")
         if self.lexer.hasNext() and self.lexer.look()['token'] in {'int','boolean','char'} :
-            token = self.lexer.token()
+            token = self.lexer.next()
             self.xml.write(token['token'])
         elif self.lexer.hasNext() and self.lexer.look()['type'] == 'identifier' :
             self.className()
@@ -277,9 +277,9 @@ class ParserXML:
         """
         self.xml.write(f"""<term>\n""")
         token = self.lexer.next()
-        if token['type'] == 'integerConstant' : #integerConstant
+        if token['type'] == 'IntegerConstant' : #integerConstant
             self.xml.write(token['token'])
-        elif token['type'] == 'stringConstant' : #stringConstant
+        elif token['type'] == 'StringConstant' : #stringConstant
             self.xml.write(token['token'])
         elif self.lexer.look()['token'] in {'true','false','null','this'} : #keywordConstant
             self.KeywordConstant()
