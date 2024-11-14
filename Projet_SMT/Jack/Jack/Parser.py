@@ -75,7 +75,7 @@ class Parser:
         self.parameterList()
         self.process(')')
         self.subroutineBody()
-        return {'line':line, 'col':col, 'type':type, 'return':retourne, 'name':name, 'argument':[], 'local': [] 'instructions':[self.statements()]}
+        return {'line':line, 'col':col, 'type':type, 'return':retourne, 'name':name, 'argument':[], 'local': [], 'instructions':[self.statements()]}
 
     def parameterList(self):
         """
