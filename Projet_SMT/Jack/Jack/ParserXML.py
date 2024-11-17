@@ -37,6 +37,7 @@ class ParserXML:
         while self.lexer.look()['token'] == ',' :
             self.process(',')
             self.varName()
+        token = self.lexer.look()['token']
         self.process(';')
         self.xml.write(f"""</classVarDec>\n""")
 
@@ -60,15 +61,15 @@ class ParserXML:
         subroutineName '(' parameterList ')' subroutineBody
         """
         self.xml.write(f"""<subroutineDec>\n""")
-        token = self.lexer.token()
-        match token['keyword'] :
+        #token = self.lexer.next()
+        match self.lexer.look()['token'] :
             case 'constructor' :
                 self.process('constructor')
             case 'function' :
                 self.process('function')
             case 'method' :
                 self.process('method')
-        if token['keyword'] == 'void' :
+        if self.lexer.look()['token'] == 'void' :
             self.process('void')
         else :
             self.type()
@@ -111,7 +112,7 @@ class ParserXML:
         """
         self.xml.write(f"""<varDec>\n""")
         if self.lexer.hasNext() and self.lexer.look()['token'] == 'var' :
-            token = self.lexer.token()
+            token = self.lexer.next()
             self.xml.write(f"""<keyword>{token['token']}</keyword>\n""")
         else :
             self.error(self.lexer.next())
@@ -153,9 +154,9 @@ class ParserXML:
         varName: identifier
         """
         self.xml.write(f"""<varName>\n""")
-        token = self.lexer.next()
+        token = self.lexer.look()
         if token['type'] == 'identifier' :
-            self.xml.write(token['token'])
+            self.xml.write(self.lexer.next()['token'])
         else :
             self.error(token)
         self.xml.write(f"""</varName>\n""")
@@ -178,6 +179,7 @@ class ParserXML:
             case 'if' :
                 self.ifStatement()
             case 'let':
+                token = self.lexer.look()['token']
                 self.letStatement()
             case 'while':
                 self.whileStatement()
@@ -193,13 +195,16 @@ class ParserXML:
         """
         self.xml.write(f"""<letStatement>\n""")
         self.process('let')
+        token = self.lexer.look()
         self.varName()
         if self.lexer.look()['token'] == '[':
             self.process('[')
             self.expression()
             self.process(']')
         self.process('=')
+        token = self.lexer.look()
         self.expression()
+        token = self.lexer.next()
         self.process(';')
         self.xml.write(f"""</letStatement>\n""")
 
@@ -211,6 +216,7 @@ class ParserXML:
         self.process('if')
         self.process('(')
         self.expression()
+        token = self.lexer.next()[('token')]
         self.process(')')
         self.process('{')
         self.statements()
@@ -227,9 +233,11 @@ class ParserXML:
         whileStatement : 'while' '(' expression ')' '{' statements '}'
         """
         self.xml.write(f"""<whileStatement>\n""")
+
         self.process('while')
         self.process('(')
         self.expression()
+        token = self.lexer.next()['token']
         self.process(')')
         self.process('{')
         self.statements()
@@ -276,7 +284,7 @@ class ParserXML:
                 | '(' expression ')' | unaryOp term
         """
         self.xml.write(f"""<term>\n""")
-        token = self.lexer.next()
+        token = self.lexer.look()
         if token['type'] == 'IntegerConstant' : #integerConstant
             self.xml.write(token['token'])
         elif token['type'] == 'StringConstant' : #stringConstant
@@ -311,15 +319,20 @@ class ParserXML:
         self.xml.write(f"""<subroutineCall>\n""")
         if self.lexer.look2()['token'] == '.':
             self.xml.write(f"""<classvarName>\n""")
+            token = self.lexer.look()['token']
+            self.varName()
+            token = self.lexer.look()['token']
             self.process('.')
             self.subroutineName()
             self.process('(')
+            token = self.lexer.look()['token']
             self.expressionList()
             self.process(')')
             self.xml.write(f"""</classvarName>\n""")
         else :
             self.subroutineName()
             self.process('(')
+
             self.expressionList()
             self.process(')')
         self.xml.write(f"""</subroutineCall>\n""")
