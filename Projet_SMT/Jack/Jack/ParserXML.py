@@ -166,7 +166,9 @@ class ParserXML:
         statements : statement*
         """
         self.xml.write(f"""<statements>\n""")
+
         while self.lexer.hasNext() and self.lexer.look()['token'] in {'let','if','while','do','return'}:
+            token = self.lexer.look()
             self.statement()
         self.xml.write(f"""</statements>\n""")
 
@@ -175,6 +177,7 @@ class ParserXML:
         statement : letStatements|ifStatement|whileStatement|doStatement|returnStatement
         """
         self.xml.write(f"""<statement>\n""")
+        token = self.lexer.look()
         match self.lexer.look()['token']:
             case 'if' :
                 self.ifStatement()
@@ -204,7 +207,7 @@ class ParserXML:
         self.process('=')
         token = self.lexer.look()
         self.expression()
-        token = self.lexer.next()
+        token = self.lexer.look()
         self.process(';')
         self.xml.write(f"""</letStatement>\n""")
 
@@ -216,7 +219,7 @@ class ParserXML:
         self.process('if')
         self.process('(')
         self.expression()
-        token = self.lexer.next()[('token')]
+        token = self.lexer.look()[('token')]
         self.process(')')
         self.process('{')
         self.statements()
@@ -233,11 +236,10 @@ class ParserXML:
         whileStatement : 'while' '(' expression ')' '{' statements '}'
         """
         self.xml.write(f"""<whileStatement>\n""")
-
         self.process('while')
         self.process('(')
         self.expression()
-        token = self.lexer.next()['token']
+        token = self.lexer.look()['token']
         self.process(')')
         self.process('{')
         self.statements()
@@ -260,7 +262,8 @@ class ParserXML:
         """
         self.xml.write(f"""<returnStatement>\n""")
         self.process('return')
-        if self.lexer.look2()['token'] == ';':
+        token = self.lexer.look()
+        if self.lexer.look()['token'] != ';':
             self.expression()
         self.process(';')
 
@@ -272,6 +275,7 @@ class ParserXML:
         """
         self.xml.write(f"""<expression>\n""")
         self.term()
+        token = self.lexer.look()
         while self.lexer.look()['token'] in {'+','-','=','>','<','*','/','&','|'} :
             self.op()
             self.term()
@@ -286,9 +290,9 @@ class ParserXML:
         self.xml.write(f"""<term>\n""")
         token = self.lexer.look()
         if token['type'] == 'IntegerConstant' : #integerConstant
-            self.xml.write(token['token'])
+            self.xml.write(self.lexer.next()['token'])
         elif token['type'] == 'StringConstant' : #stringConstant
-            self.xml.write(token['token'])
+            self.xml.write(self.lexer.next()['token'])
         elif self.lexer.look()['token'] in {'true','false','null','this'} : #keywordConstant
             self.KeywordConstant()
         elif self.lexer.look2()['token'] == '[' : #varName '[' expression ']'
@@ -299,7 +303,7 @@ class ParserXML:
         elif self.lexer.look()['token'] in {'-','~'}: #unaryOp term
             self.unaryOp()
             self.term()
-        elif self.lexer.look()['token'] == '(': #'(' expression ')'
+        elif token['token'] == '(': #'(' expression ')'
             self.process('(')
             self.expression()
             self.process(')')
@@ -342,8 +346,9 @@ class ParserXML:
         expressionList : (expression (',' expression)*)?
         """
         self.xml.write(f"""<expressionList>\n""")
-        token = self.lexer.next()
-        if token['type'] in {'integerConstant','stringConstant'} or self.lexer.look()['token'] in {'true','false','null','this'} or self.lexer.look2()['token'] in {'[','(','.'} or self.lexer.look()['token'] in {'-','~','('} or token['type'] == 'identifier' :
+        token = self.lexer.look()
+
+        if token['type'] in {'IntegerConstant','StringConstant'} or self.lexer.look()['token'] in {'true','false','null','this'} or self.lexer.look2()['token'] in {'[','(','.'} or self.lexer.look()['token'] in {'-','~','('} or token['type'] == 'identifier' :
             self.expression()
             while self.lexer.hasNext() and self.lexer.look()['token'] == ',':
                 self.process(',')
