@@ -14,9 +14,10 @@ class Todot:
         """)
 
     def dotStr(self, succ, val, label=''):
+        valbis = val.replace('"', '')
         self.ctp += 1
         self.dot.write(f"""
-        n{self.ctp} [label={val}];
+        n{self.ctp} [label="{valbis}"];
         {succ} -- n{self.ctp}[label="{label}"]
         """)
 
