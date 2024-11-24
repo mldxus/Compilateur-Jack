@@ -2,9 +2,6 @@ import sys
 import Lexer
 import todot
 
-
-
-
 class Parser:
    """No comment"""
 
@@ -23,101 +20,139 @@ class Parser:
        self.process('class')
        className=self.className()
        self.process('{')
-       #while self.lexer.hasNext() and self.lexer.look()['token'] in {'static', 'field'}:
-           #self.classVarDec()
+       classVarDecs = []
+       while self.lexer.hasNext() and self.lexer.look()['token'] in {'static', 'field'}:
+            classVarDecs.append(self.classVarDec())
+       subroutines = []
+        while self.lexer.hasNext() and self.lexer.look()['token'] in {'constructor','function','method'} :
+            subroutines.append(self.subroutineDec())
        self.process('}')
        return {
            'line': line,
            'col': col,
            'type': 'class',
            'name': className,
-           'classVarDecs': [self.classVarDec()],
-           'subroutines': [self.subroutineDec()]
-}
+           'classVarDecs': classVarDecs,
+           'subroutines': subroutines
+        }
 
 
-   def classVarDec(self):
-       """
-       classVarDec: ('static'| 'field') type varName (',' varName)* ';'
-       """
-       line = self.lexer.look()['line']
-       col = self.lexer.look()['col']
-       if self.lexer.look()['token'] == 'static' :
-           kind = 'static'
-       else :
-           kind = 'this'
-       self.process(self.lexer.look()['token'])
-       type = self.type()
-       varName = []
-       varName.append(self.varName())
-       while self.lexer.look()['token'] == ',':
-           self.process(',')
-           varName.append(self.varName())
-       self.process(';')
-       return {'line':line, 'col':col, 'name':varName, 'kind':kind, 'type':type}
+    def classVarDec(self):
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        kind = self.lexer.next()['token']
+        var_type = self.type()
+        var_names = [self.varName()]
+
+        while self.lexer.look()['token'] == ',':
+            self.process(',')
+            var_names.append(self.varName())
+
+        self.process(';')
+        return {
+            'line': line,
+            'col': col,
+            'kind': kind,
+            'type': var_type,
+            'names': var_names
+        }
 
 
-   def type(self):
-       """
-       type: 'int'|'char'|'boolean'|className
-       """
-       return 'Todo'
+       def type(self):
+           """
+           type: 'int'|'char'|'boolean'|className
+           """
+           if self.lexer.hasNext() and self.lexer.look()['token'] in {'int', 'boolean', 'char'}:
+               token = self.lexer.next()
+               type = token['token']
+               self.xml.write(token['token'])
+           elif self.lexer.hasNext() and self.lexer.look()['type'] == 'identifier':
+               type = self.className()
+           else:
+               self.error(self.lexer.next())
+           return type
 
 
+    def subroutineDec(self):
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        kind = self.lexer.next()['token']  # 'constructor', 'function', ou 'method'
+
+        returnType = self.process('void') if self.lexer.look()['token'] == 'void' else self.type()
+        name = self.subroutineName()
+
+        self.process('(')
+        parameters = self.parameterList()
+        self.process(')')
+
+        body = self.subroutineBody()
+
+        return {
+            'line': line,
+            'col': col,
+            'type': kind,
+            'returnType': returnType,
+            'name': name,
+            'parameters': parameters,
+            'body': body
+        }
 
 
-   def subroutineDec(self):
-       """
-       subroutineDec: ('constructor'| 'function'|'method') ('void'|type)
-       subroutineName '(' parameterList ')' subroutineBody
-       """
-       line = self.lexer.look()['line']
-       col = self.lexer.look()['col']
-       token = self.lexer.token()
-       match token['keyword']:
-           case 'constructor':
-               type = self.process('constructor')
-           case 'function':
-               type = self.process('function')
-           case 'method':
-               type = self.process('method')
-       if token['keyword'] == 'void':
-           retourne = self.process('void')
-       else:
-           retourne = self.type()
-       name = self.subroutineName()
-       self.process('(')
-       self.parameterList()
-       self.process(')')
-       self.subroutineBody()
-       return {'line':line, 'col':col, 'type':type, 'return':retourne, 'name':name, 'argument':[], 'local': [], 'instructions':[self.statements()]}
+    def parameterList(self):
+        params = []
+        if self.lexer.look()['token'] not in {')'}:  # Si pas vide
+            type = self.type()
+            name = self.varName()
+            params.append({'type': type, 'name': name})
+
+            while self.lexer.look()['token'] == ',':
+                self.process(',')
+                type = self.type()
+                name = self.varName()
+                params.append({'type': type, 'name': name})
+        return params
 
 
-   def parameterList(self):
-       """
-       parameterList: ((type varName) (',' type varName)*)?
-       """
-       return 'Todo'
+    def subroutineBody(self):
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        self.process('{')
+
+        varDecs = []
+        while self.lexer.hasNext() and self.lexer.look()['token'] == 'var':
+            varDecs.append(self.varDec())
+
+        statements = self.statements()
+        self.process('}')
+
+        return {'line': line, 'col': col, 'type': 'subroutineBody', 'varDecs': varDecs, 'statements': statements}
 
 
-   def subroutineBody(self):
-       """
-       subroutineBody: '{' varDec* statements '}'
-       """
-       return 'Todo'
+    def varDec(self):
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        self.process('var')
+        var_type = self.type()
+        names = [self.varName()]
 
+        while self.lexer.look()['token'] == ',':
+            self.process(',')
+            names.append(self.varName())
 
-   def varDec(self):
-       """
-       varDec: 'var' type varName (',' varName)* ';'
-       """
+        self.process(';')
+        return {'line': line, 'col': col, 'type': 'varDec', 'varType': var_type, 'names': names}
 
 
    def className(self):
        """
        className: identifier
        """
-
+       token = self.lexer.next()
+       if token['type'] == 'identifier':
+           self.xml.write(token['token'])
+       else:
+           self.error(token)
+        return token['token']
 
        token = self.lexer.next()
        if token['type'] == 'identifier':
@@ -126,33 +161,27 @@ class Parser:
            self.error(token)
 
 
+    def subroutineName(self):
+        token = self.lexer.next()
+        if token['type'] == 'identifier':
+            return {'type': 'subroutineName', 'name': token['token']}
+        else:
+            self.error(token)
 
 
+    def varName(self):
+        token = self.lexer.next()
+        if token['type'] == 'identifier':
+            return {'type': 'varName', 'name': token['token']}
+        else:
+            self.error(token)
 
 
-   def subroutineName(self):
-       """
-       subroutineName: identifier
-       """
-       return 'Todo'
-
-
-   def varName(self):
-       """
-       varName: identifier
-       """
-       return 'Todo'
-
-
-   def statements(self):
-       """
-       statements : statements*
-       """
-       line = self.lexer.look()['line']
-       col = self.lexer.look()['col']
-       while self.lexer.hasNext() and self.lexer.look()['token'] in {'let','if','while','do','return'}:
-           self.statement()
-       return 'Todo'
+    def statements(self):
+        stmts = []
+        while self.lexer.hasNext() and self.lexer.look()['token'] in {'let', 'if', 'while', 'do', 'return'}:
+            stmts.append(self.statement())
+        return stmts
 
 
    def statement(self):
@@ -173,43 +202,46 @@ class Parser:
        return 'Todo'
 
 
-   def letStatement(self):
-       """
-       letStatement : 'let' varName ('[' expression ']')? '=' expression ';'
-       """
-       line = self.lexer.look()['line']
-       col = self.lexer.look()['col']
-       self.process('let')
-       variable = self.varName()
-       if self.lexer.look()['token'] == '[':
-           self.process('[')
-           indice = self.expression()
-           self.process(']')
-       self.process('=')
-       valeur = self.expression()
-       self.process(';')
-       return {'line':line, 'col':col, 'type':'let', 'variable':variable, 'indice':indice, 'valeur':valeur}
+    def letStatement(self):
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+
+        self.process('let')
+        variable = self.varName()
+
+        index = None
+        if self.lexer.look()['token'] == '[':  # Tableau
+            self.process('[')
+            index = self.expression()
+            self.process(']')
+
+        self.process('=')
+        value = self.expression()
+        self.process(';')
+
+        return {'line': line, 'col': col, 'type': 'let', 'variable': variable, 'index': index, 'value': value}
 
 
-   def ifStatement(self):
-       """
-       ifStatement : 'if' '(' expression ')' '{' statements '}' ('else' '{' statements '}')?
-       """
-       line = self.lexer.look()['line']
-       col = self.lexer.look()['col']
-       self.process('if')
-       self.process('(')
-       cond = self.expression()
-       self.process(')')
-       self.process('{')
-       vrai = self.statements()
-       self.process('}')
-       if self.lexer.look()['token'] == 'else':
-           self.process('else')
-           self.process('{')
-           faux = self.statements()
-           self.process('}')
-       return {'line':line, 'col':col, 'type':'if', 'condition':cond, 'true':[vrai], 'false':[faux]}
+    def ifStatement(self):
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+
+        self.process('if')
+        self.process('(')
+        condition = self.expression()
+        self.process(')')
+        self.process('{')
+        trueBlock = self.statements()
+        self.process('}')
+
+        falseBlock = None
+        if self.lexer.look()['token'] == 'else':
+            self.process('else')
+            self.process('{')
+            falseBlock = self.statements()
+            self.process('}')
+
+        return {'line': line, 'col': col, 'type': 'if', 'condition': condition, 'true': trueBlock, 'false': falseBlock}
 
 
    def whileStatement(self):
@@ -228,14 +260,13 @@ class Parser:
        return {'line':line, 'col':col, 'type':'while', 'condition':cond, 'instructions':[inst]}
 
 
-   def doStatement(self):
-       """
-       doStatement : 'do' subroutineCall ';'
-       """
-       self.process('do')
-       self.subroutineCall()
-       self.process(';')
-       return ''
+    def doStatement(self):
+        line = self.lexer.look()['line']
+        col = self.lexer.look()['col']
+        self.process('do')
+        call = self.subroutineCall()
+        self.process(';')
+        return {'line': line, 'col': col, 'type': 'do', 'call': call}
 
 
    def returnStatement(self):
@@ -259,51 +290,66 @@ class Parser:
        return expr
 
 
+    def term(self):
+        token = self.lexer.look()
+        if token['type'] == 'IntegerConstant':
+            return {'type': 'int', 'value': self.lexer.next()['token']}
+        elif token['type'] == 'StringConstant':
+            return {'type': 'string', 'value': self.lexer.next()['token']}
+        elif token['token'] in {'true', 'false', 'null', 'this'}:
+            return {'type': 'keyword', 'value': self.KeywordConstant()}
+        elif self.lexer.look()['token'] == '(':
+            self.process('(')
+            expr = self.expression()
+            self.process(')')
+            return {'type': 'expression', 'value': expr}
+        else:
+            return {'type': 'var', 'name': self.varName()}
 
 
-   def term(self):
-       """
-       term : integerConstant|stringConstant|keywordConstant
-               |varName|varName '[' expression ']'|subroutineCall
-               | '(' expression ')' | unaryOp term
-       """
-       return 'Todo'
+    def subroutineCall(self):
+        if self.lexer.look2()['token'] == '.':
+            classOrVarName = self.varName()
+            self.process('.')
+            subroutineName = self.subroutineName()
+        else:
+            classOrVarName = None
+            subroutineName = self.subroutineName()
+
+        self.process('(')
+        arguments = self.expressionList()
+        self.process(')')
+
+        return {
+            'classOrVar': classOrVarName,
+            'subroutineName': subroutineName,
+            'arguments': arguments
+        }
 
 
-   def subroutineCall(self):
-       """
-       subroutineCall : subroutineName '(' expressionList ')'
-               | (className|varName) '.' subroutineName '(' expressionList ')'
-       Attention : l'analyse syntaxique ne peut pas distingué className et varName.
-           Nous utiliserons la balise <classvarName> pour (className|varName)
-       """
-       return 'Todo'
+    def expressionList(self):
+        expressions = []
+        if self.lexer.look()['token'] != ')':
+            expressions.append(self.expression())
+            while self.lexer.look()['token'] == ',':
+                self.process(',')
+                expressions.append(self.expression())
+        return expressions
 
 
-   def expressionList(self):
-       """
-       expressionList : (expression (',' expression)*)?
-       """
-       return 'Todo'
+    def op(self):
+        token = self.lexer.next()
+        return {'type': 'operator', 'value': token['token']}
 
 
-   def op(self):
-       """
-       op : '+'|'-'|'*'|'/'|'&'|'|'|'<'|'>'|'='
-       """
+    def unaryOp(self):
+        token = self.lexer.next()
+        return {'type': 'unaryOp', 'value': token['token']}
 
 
-   def unaryOp(self):
-       """
-       unaryop : '-'|'~'
-       """
-       return 'Todo'
-
-
-   def KeywordConstant(self):
-       """
-       KeyWordConstant : 'true'|'false'|'null'|'this'
-       """
+    def KeywordConstant(self):
+        token = self.lexer.next()
+        return {'type': 'keywordConstant', 'value': token['token']}
 
 
    def process(self, str):
