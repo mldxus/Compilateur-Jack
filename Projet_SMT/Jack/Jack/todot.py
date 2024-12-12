@@ -14,10 +14,10 @@ class Todot:
         """)
 
     def dotStr(self, succ, val, label=''):
-        valbis = val.replace('"', '')
         self.ctp += 1
+        valbis = val.replace('"', '')
         self.dot.write(f"""
-        n{self.ctp} [label="{valbis}"];
+        n{self.ctp} [label=\"{valbis}\"];
         {succ} -- n{self.ctp}[label="{label}"]
         """)
 
@@ -27,13 +27,13 @@ class Todot:
         if 'type' in val:
             labelnode = val['type']
         else:
-            labelnode='dict'
+            labelnode = 'dict'
         self.dot.write(f"""
         {l} [shape=\"invhouse\",label="{labelnode}"];
         {pred} -- {l} [label="{label}"];
         """)
         for v in val:
-            if v not in {'type','col','line'}:
+            if v not in {'type', 'col', 'line'}:
                 self.dotAny(l, val[v], v)
 
     def dotList(self, pred, val, label=''):
@@ -56,7 +56,7 @@ class Todot:
         else:
             self.dotInt(pred, val, label)
 
-    def todot(self,val):
+    def todot(self, val):
         self.dot.write("""
         graph mygraph {
         n0 [shape=point] ;
@@ -70,5 +70,6 @@ if __name__ == "__main__":
     file = sys.argv[1]
     print('-----debut')
     todot = Todot(file)
-    todot.todot({'type':'good','a':[5,8,0,2,[8,1,2,3,4]],'b':[[8,9,76,4],'toto'],'c':[[8,9,76,4],'tutu']})
+    todot.todot({'type': '+', 'a': ["toto", '+', 0, 2, [8, 1, 2, 3, 4]], 'b': [[8, 9, 76, 4], 'toto'],
+                 'c': [[8, 9, 76, 4], 'tutu']})
     print('-----fin')
