@@ -1,0 +1,48 @@
+class GuessNumber {
+
+    static boolean gameRunning;
+    static int randomNumber;
+    static int userGuess;
+
+    function void main() {
+        do Output.printString("Bienvenue au jeu "Guess the Number" !\n");
+        do Output.printString("J'ai sélectionné un nombre entre 0 et 20, arriverez vous à le deviner ?\n\n");
+
+        // Initialize the game
+        let gameRunning = true;
+        do GuessNumber.generateRandomNumber();
+
+        while (gameRunning) {
+            do Output.printString("Entrez votre proposition :");
+            let userGuess = Keyboard.readInt();
+            do GuessNumber.checkGuess(userGuess);
+        }
+
+        do Sys.halt();
+    }
+
+    /**
+     * Generates a random number between 0 and 20
+     */
+    function void generateRandomNumber() {
+        let randomNumber = Math.random(21);
+        return;
+    }
+
+    /**
+     * Checks the user's guess and provides feedback
+     */
+    function void checkGuess(int guess) {
+        if (guess = randomNumber) {
+            do Output.printString("Félicitation ! Vous avez gagné !\n");
+            let gameRunning = false;
+        } else {
+            if (guess < randomNumber) {
+                do Output.printString("Trop petit, réessayez !\n");
+            } else {
+                do Output.printString("Trop grand, réessayez !\n");
+            }
+        }
+        return;
+    }
+}
