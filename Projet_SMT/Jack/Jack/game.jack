@@ -5,7 +5,7 @@ class GuessNumber {
     static int userGuess;
 
     function void main() {
-        do Output.printString("Bienvenue au jeu "Guess the Number" !\n");
+        do Output.printString("Bienvenue au jeu Guess the Number' !\n");
         do Output.printString("J'ai sélectionné un nombre entre 0 et 20, arriverez vous à le deviner ?\n\n");
 
         // Initialize the game
