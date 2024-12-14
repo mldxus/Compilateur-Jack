@@ -13,6 +13,7 @@ class Generator:
             self.vmfile = open(self.arbre['name'] + '.vm', "w")
             self.symbolClassTable = []
             self.symbolRoutineTable = []
+            self.label_count = 0
 
     def jackclass(self, arbre):
         """
@@ -237,10 +238,42 @@ class Generator:
             print(f"SyntaxError: {message}")
             exit()
 
+    def getSegment(self, varName):
+        # Recherche dans les tables de symboles
+        for symbol in self.symbolRoutineTable + self.symbolClassTable:
+            if symbol['name'] == varName:
+                kind = symbol['kind']
+                if kind == 'static':
+                    return 'static'
+                elif kind == 'field':
+                    return 'this'
+                elif kind == 'local':
+                    return 'local'
+                elif kind == 'argument':
+                    return 'argument'
+        self.error(f"Variable {varName} not found.")
+
+    def getIndex(self, varName):
+        for i, symbol in enumerate(self.symbolRoutineTable + self.symbolClassTable):
+            if symbol['name'] == varName:
+                return i
+        self.error(f"Variable {varName} not found.")
+
+    def writeStringConstant(self, string):
+        self.vmfile.write(f"push constant {len(string)}\n")  # Taille de la chaîne
+        self.vmfile.write("call String.new 1\n")  # Appel à String.new
+        for char in string:
+            self.vmfile.write(f"push constant {ord(char)}\n")
+            self.vmfile.write("call String.appendChar 2\n")
+
+    def error(self, message=''):
+        print(f"Error: {message}")
+        sys.exit(1)  # Arrête l'exécution en cas d'erreur critique
+
 
 if __name__ == '__main__':
     file = sys.argv[1]
     print('-----debut')
     generator = Generator(file)
-    generator.jackclass()
+    generator.jackclass(generator.arbre)
     print('-----fin')

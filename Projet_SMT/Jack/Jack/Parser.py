@@ -5,9 +5,9 @@ import todot
 class Parser:
    """No comment"""
 
-
    def __init__(self, file):
        self.lexer = Lexer.Lexer(file)
+       self.xml = open("output.xml", "w")  # Ajout pour générer un fichier XML
 
 
    def jackclass(self):
