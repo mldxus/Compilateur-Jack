@@ -1,429 +1,484 @@
-<?xml version="1.0" encoding="UTF-8"?><class>
-<keyword>class</keyword>
-<className>GuessNumber</className><symbol>{</symbol>
-<classVarDec>
-<keyword>static</keyword>
-<type>
-boolean</type>
-<varName>
-gameRunning</varName>
-<symbol>;</symbol>
-</classVarDec>
-<classVarDec>
-<keyword>static</keyword>
-<type>
-int</type>
-<varName>
-randomNumber</varName>
-<symbol>;</symbol>
-</classVarDec>
-<classVarDec>
-<keyword>static</keyword>
-<type>
-int</type>
-<varName>
-userGuess</varName>
-<symbol>;</symbol>
-</classVarDec>
-<subroutineDec>
-<keyword>function</keyword>
-<keyword>void</keyword>
-<subroutineName>main</subroutineName><symbol>(</symbol>
-<parameterList>
-</parameterList>
-<symbol>)</symbol>
-<subroutineBody>
-<symbol>{</symbol>
-<statements>
-<statement>
-<doStatement>
-<keyword>do</keyword>
-<subroutineCall>
-<classvarName>
-<varName>
-Output</varName>
-<symbol>.</symbol>
-<subroutineName>printString</subroutineName><symbol>(</symbol>
-<expressionList>
-<expression>
-<term>
-"Bienvenue au jeu Guess the Number' !\n"</term>
-</expression>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-<symbol>;</symbol>
-</doStatement>
-</statement>
-<statement>
-<doStatement>
-<keyword>do</keyword>
-<subroutineCall>
-<classvarName>
-<varName>
-Output</varName>
-<symbol>.</symbol>
-<subroutineName>printString</subroutineName><symbol>(</symbol>
-<expressionList>
-<expression>
-<term>
-"J'ai sélectionné un nombre entre 0 et 20, arriverez vous à le deviner ?\n\n"</term>
-</expression>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-<symbol>;</symbol>
-</doStatement>
-</statement>
-<statement>
-<letStatement>
-<keyword>let</keyword>
-<varName>
-gameRunning</varName>
-<symbol>=</symbol>
-<expression>
-<term>
-<KeyWordConstant>
-<keyword>true</keyword>
-</KeyWordConstant>
-</term>
-</expression>
-<symbol>;</symbol>
-</letStatement>
-</statement>
-<statement>
-<doStatement>
-<keyword>do</keyword>
-<subroutineCall>
-<classvarName>
-<varName>
-GuessNumber</varName>
-<symbol>.</symbol>
-<subroutineName>generateRandomNumber</subroutineName><symbol>(</symbol>
-<expressionList>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-<symbol>;</symbol>
-</doStatement>
-</statement>
-<statement>
-<whileStatement>
-<keyword>while</keyword>
-<symbol>(</symbol>
-<expression>
-<term>
-<varName>
-gameRunning</varName>
-</term>
-</expression>
-<symbol>)</symbol>
-<symbol>{</symbol>
-<statements>
-<statement>
-<doStatement>
-<keyword>do</keyword>
-<subroutineCall>
-<classvarName>
-<varName>
-Output</varName>
-<symbol>.</symbol>
-<subroutineName>printString</subroutineName><symbol>(</symbol>
-<expressionList>
-<expression>
-<term>
-"Entrez votre proposition :"</term>
-</expression>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-<symbol>;</symbol>
-</doStatement>
-</statement>
-<statement>
-<letStatement>
-<keyword>let</keyword>
-<varName>
-userGuess</varName>
-<symbol>=</symbol>
-<expression>
-<term>
-<subroutineCall>
-<classvarName>
-<varName>
-Keyboard</varName>
-<symbol>.</symbol>
-<subroutineName>readInt</subroutineName><symbol>(</symbol>
-<expressionList>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-</term>
-</expression>
-<symbol>;</symbol>
-</letStatement>
-</statement>
-<statement>
-<doStatement>
-<keyword>do</keyword>
-<subroutineCall>
-<classvarName>
-<varName>
-GuessNumber</varName>
-<symbol>.</symbol>
-<subroutineName>checkGuess</subroutineName><symbol>(</symbol>
-<expressionList>
-<expression>
-<term>
-<varName>
-userGuess</varName>
-</term>
-</expression>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-<symbol>;</symbol>
-</doStatement>
-</statement>
-</statements>
-<symbol>}</symbol>
-</whileStatement>
-</statement>
-<statement>
-<doStatement>
-<keyword>do</keyword>
-<subroutineCall>
-<classvarName>
-<varName>
-Sys</varName>
-<symbol>.</symbol>
-<subroutineName>halt</subroutineName><symbol>(</symbol>
-<expressionList>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-<symbol>;</symbol>
-</doStatement>
-</statement>
-</statements>
-<symbol>}</symbol>
-</subroutineBody>
-</subroutineDec>
-<subroutineDec>
-<keyword>function</keyword>
-<keyword>void</keyword>
-<subroutineName>generateRandomNumber</subroutineName><symbol>(</symbol>
-<parameterList>
-</parameterList>
-<symbol>)</symbol>
-<subroutineBody>
-<symbol>{</symbol>
-<statements>
-<statement>
-<letStatement>
-<keyword>let</keyword>
-<varName>
-randomNumber</varName>
-<symbol>=</symbol>
-<expression>
-<term>
-<subroutineCall>
-<classvarName>
-<varName>
-Math</varName>
-<symbol>.</symbol>
-<subroutineName>random</subroutineName><symbol>(</symbol>
-<expressionList>
-<expression>
-<term>
-21</term>
-</expression>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-</term>
-</expression>
-<symbol>;</symbol>
-</letStatement>
-</statement>
-<statement>
-<returnStatement>
-<keyword>return</keyword>
-<symbol>;</symbol>
-</returnStatement>
-</statement>
-</statements>
-<symbol>}</symbol>
-</subroutineBody>
-</subroutineDec>
-<subroutineDec>
-<keyword>function</keyword>
-<keyword>void</keyword>
-<subroutineName>checkGuess</subroutineName><symbol>(</symbol>
-<parameterList>
-<type>
-int</type>
-<varName>
-guess</varName>
-</parameterList>
-<symbol>)</symbol>
-<subroutineBody>
-<symbol>{</symbol>
-<statements>
-<statement>
-<ifStatement>
-<keyword>if</keyword>
-<symbol>(</symbol>
-<expression>
-<term>
-<varName>
-guess</varName>
-</term>
-<op>
-<symbol>=</symbol>
-</op>
-<term>
-<varName>
-randomNumber</varName>
-</term>
-</expression>
-<symbol>)</symbol>
-<symbol>{</symbol>
-<statements>
-<statement>
-<doStatement>
-<keyword>do</keyword>
-<subroutineCall>
-<classvarName>
-<varName>
-Output</varName>
-<symbol>.</symbol>
-<subroutineName>printString</subroutineName><symbol>(</symbol>
-<expressionList>
-<expression>
-<term>
-"Félicitation ! Vous avez gagné !\n"</term>
-</expression>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-<symbol>;</symbol>
-</doStatement>
-</statement>
-<statement>
-<letStatement>
-<keyword>let</keyword>
-<varName>
-gameRunning</varName>
-<symbol>=</symbol>
-<expression>
-<term>
-<KeyWordConstant>
-<keyword>false</keyword>
-</KeyWordConstant>
-</term>
-</expression>
-<symbol>;</symbol>
-</letStatement>
-</statement>
-</statements>
-<symbol>}</symbol>
-<keyword>else</keyword>
-<symbol>{</symbol>
-<statements>
-<statement>
-<ifStatement>
-<keyword>if</keyword>
-<symbol>(</symbol>
-<expression>
-<term>
-<varName>
-guess</varName>
-</term>
-<op>
-<symbol><</symbol>
-</op>
-<term>
-<varName>
-randomNumber</varName>
-</term>
-</expression>
-<symbol>)</symbol>
-<symbol>{</symbol>
-<statements>
-<statement>
-<doStatement>
-<keyword>do</keyword>
-<subroutineCall>
-<classvarName>
-<varName>
-Output</varName>
-<symbol>.</symbol>
-<subroutineName>printString</subroutineName><symbol>(</symbol>
-<expressionList>
-<expression>
-<term>
-"Trop petit, réessayez !\n"</term>
-</expression>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-<symbol>;</symbol>
-</doStatement>
-</statement>
-</statements>
-<symbol>}</symbol>
-<keyword>else</keyword>
-<symbol>{</symbol>
-<statements>
-<statement>
-<doStatement>
-<keyword>do</keyword>
-<subroutineCall>
-<classvarName>
-<varName>
-Output</varName>
-<symbol>.</symbol>
-<subroutineName>printString</subroutineName><symbol>(</symbol>
-<expressionList>
-<expression>
-<term>
-"Trop grand, réessayez !\n"</term>
-</expression>
-</expressionList>
-<symbol>)</symbol>
-</classvarName>
-</subroutineCall>
-<symbol>;</symbol>
-</doStatement>
-</statement>
-</statements>
-<symbol>}</symbol>
-</ifStatement>
-</statement>
-</statements>
-<symbol>}</symbol>
-</ifStatement>
-</statement>
-<statement>
-<returnStatement>
-<keyword>return</keyword>
-<symbol>;</symbol>
-</returnStatement>
-</statement>
-</statements>
-<symbol>}</symbol>
-</subroutineBody>
-</subroutineDec>
-<symbol>}</symbol>
+<?xml version="1.0" encoding="UTF-8"?>
+<class>
+    <keyword>class</keyword>
+    <className>GuessNumber</className>
+    <symbol>{</symbol>
+    <classVarDec>
+        <keyword>static</keyword>
+        <type>
+            boolean
+        </type>
+        <varName>
+            gameRunning
+        </varName>
+        <symbol>;</symbol>
+    </classVarDec>
+    <classVarDec>
+        <keyword>static</keyword>
+        <type>
+            int
+        </type>
+        <varName>
+            randomNumber
+        </varName>
+        <symbol>;</symbol>
+    </classVarDec>
+    <classVarDec>
+        <keyword>static</keyword>
+        <type>
+            int
+        </type>
+        <varName>
+            userGuess
+        </varName>
+        <symbol>;</symbol>
+    </classVarDec>
+    <subroutineDec>
+        <keyword>function</keyword>
+        <keyword>void</keyword>
+        <subroutineName>main</subroutineName>
+        <symbol>(</symbol>
+        <parameterList>
+        </parameterList>
+        <symbol>)</symbol>
+        <subroutineBody>
+            <symbol>{</symbol>
+            <statements>
+                <statement>
+                    <doStatement>
+                        <keyword>do</keyword>
+                        <subroutineCall>
+                            <classvarName>
+                                <varName>
+                                    Output
+                                </varName>
+                                <symbol>.</symbol>
+                                <subroutineName>printString</subroutineName>
+                                <symbol>(</symbol>
+                                <expressionList>
+                                    <expression>
+                                        <term>
+                                            "Bienvenue au jeu Guess the Number' !\n"
+                                        </term>
+                                    </expression>
+                                </expressionList>
+                                <symbol>)</symbol>
+                            </classvarName>
+                        </subroutineCall>
+                        <symbol>;</symbol>
+                    </doStatement>
+                </statement>
+                <statement>
+                    <doStatement>
+                        <keyword>do</keyword>
+                        <subroutineCall>
+                            <classvarName>
+                                <varName>
+                                    Output
+                                </varName>
+                                <symbol>.</symbol>
+                                <subroutineName>printString</subroutineName>
+                                <symbol>(</symbol>
+                                <expressionList>
+                                    <expression>
+                                        <term>
+                                            "J'ai sélectionné un nombre entre 0 et 20, arriverez vous à le deviner
+                                            ?\n\n"
+                                        </term>
+                                    </expression>
+                                </expressionList>
+                                <symbol>)</symbol>
+                            </classvarName>
+                        </subroutineCall>
+                        <symbol>;</symbol>
+                    </doStatement>
+                </statement>
+                <statement>
+                    <letStatement>
+                        <keyword>let</keyword>
+                        <varName>
+                            gameRunning
+                        </varName>
+                        <symbol>=</symbol>
+                        <expression>
+                            <term>
+                                <KeyWordConstant>
+                                    <keyword>true</keyword>
+                                </KeyWordConstant>
+                            </term>
+                        </expression>
+                        <symbol>;</symbol>
+                    </letStatement>
+                </statement>
+                <statement>
+                    <doStatement>
+                        <keyword>do</keyword>
+                        <subroutineCall>
+                            <classvarName>
+                                <varName>
+                                    GuessNumber
+                                </varName>
+                                <symbol>.</symbol>
+                                <subroutineName>generateRandomNumber</subroutineName>
+                                <symbol>(</symbol>
+                                <expressionList>
+                                </expressionList>
+                                <symbol>)</symbol>
+                            </classvarName>
+                        </subroutineCall>
+                        <symbol>;</symbol>
+                    </doStatement>
+                </statement>
+                <statement>
+                    <whileStatement>
+                        <keyword>while</keyword>
+                        <symbol>(</symbol>
+                        <expression>
+                            <term>
+                                <varName>
+                                    gameRunning
+                                </varName>
+                            </term>
+                        </expression>
+                        <symbol>)</symbol>
+                        <symbol>{</symbol>
+                        <statements>
+                            <statement>
+                                <doStatement>
+                                    <keyword>do</keyword>
+                                    <subroutineCall>
+                                        <classvarName>
+                                            <varName>
+                                                Output
+                                            </varName>
+                                            <symbol>.</symbol>
+                                            <subroutineName>printString</subroutineName>
+                                            <symbol>(</symbol>
+                                            <expressionList>
+                                                <expression>
+                                                    <term>
+                                                        "Entrez votre proposition :"
+                                                    </term>
+                                                </expression>
+                                            </expressionList>
+                                            <symbol>)</symbol>
+                                        </classvarName>
+                                    </subroutineCall>
+                                    <symbol>;</symbol>
+                                </doStatement>
+                            </statement>
+                            <statement>
+                                <letStatement>
+                                    <keyword>let</keyword>
+                                    <varName>
+                                        userGuess
+                                    </varName>
+                                    <symbol>=</symbol>
+                                    <expression>
+                                        <term>
+                                            <subroutineCall>
+                                                <classvarName>
+                                                    <varName>
+                                                        Keyboard
+                                                    </varName>
+                                                    <symbol>.</symbol>
+                                                    <subroutineName>readInt</subroutineName>
+                                                    <symbol>(</symbol>
+                                                    <expressionList>
+                                                    </expressionList>
+                                                    <symbol>)</symbol>
+                                                </classvarName>
+                                            </subroutineCall>
+                                        </term>
+                                    </expression>
+                                    <symbol>;</symbol>
+                                </letStatement>
+                            </statement>
+                            <statement>
+                                <doStatement>
+                                    <keyword>do</keyword>
+                                    <subroutineCall>
+                                        <classvarName>
+                                            <varName>
+                                                GuessNumber
+                                            </varName>
+                                            <symbol>.</symbol>
+                                            <subroutineName>checkGuess</subroutineName>
+                                            <symbol>(</symbol>
+                                            <expressionList>
+                                                <expression>
+                                                    <term>
+                                                        <varName>
+                                                            userGuess
+                                                        </varName>
+                                                    </term>
+                                                </expression>
+                                            </expressionList>
+                                            <symbol>)</symbol>
+                                        </classvarName>
+                                    </subroutineCall>
+                                    <symbol>;</symbol>
+                                </doStatement>
+                            </statement>
+                        </statements>
+                        <symbol>}</symbol>
+                    </whileStatement>
+                </statement>
+                <statement>
+                    <doStatement>
+                        <keyword>do</keyword>
+                        <subroutineCall>
+                            <classvarName>
+                                <varName>
+                                    Sys
+                                </varName>
+                                <symbol>.</symbol>
+                                <subroutineName>halt</subroutineName>
+                                <symbol>(</symbol>
+                                <expressionList>
+                                </expressionList>
+                                <symbol>)</symbol>
+                            </classvarName>
+                        </subroutineCall>
+                        <symbol>;</symbol>
+                    </doStatement>
+                </statement>
+            </statements>
+            <symbol>}</symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword>function</keyword>
+        <keyword>void</keyword>
+        <subroutineName>generateRandomNumber</subroutineName>
+        <symbol>(</symbol>
+        <parameterList>
+        </parameterList>
+        <symbol>)</symbol>
+        <subroutineBody>
+            <symbol>{</symbol>
+            <statements>
+                <statement>
+                    <letStatement>
+                        <keyword>let</keyword>
+                        <varName>
+                            randomNumber
+                        </varName>
+                        <symbol>=</symbol>
+                        <expression>
+                            <term>
+                                <subroutineCall>
+                                    <classvarName>
+                                        <varName>
+                                            Math
+                                        </varName>
+                                        <symbol>.</symbol>
+                                        <subroutineName>random</subroutineName>
+                                        <symbol>(</symbol>
+                                        <expressionList>
+                                            <expression>
+                                                <term>
+                                                    21
+                                                </term>
+                                            </expression>
+                                        </expressionList>
+                                        <symbol>)</symbol>
+                                    </classvarName>
+                                </subroutineCall>
+                            </term>
+                        </expression>
+                        <symbol>;</symbol>
+                    </letStatement>
+                </statement>
+                <statement>
+                    <returnStatement>
+                        <keyword>return</keyword>
+                        <symbol>;</symbol>
+                    </returnStatement>
+                </statement>
+            </statements>
+            <symbol>}</symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword>function</keyword>
+        <keyword>void</keyword>
+        <subroutineName>checkGuess</subroutineName>
+        <symbol>(</symbol>
+        <parameterList>
+            <type>
+                int
+            </type>
+            <varName>
+                guess
+            </varName>
+        </parameterList>
+        <symbol>)</symbol>
+        <subroutineBody>
+            <symbol>{</symbol>
+            <statements>
+                <statement>
+                    <ifStatement>
+                        <keyword>if</keyword>
+                        <symbol>(</symbol>
+                        <expression>
+                            <term>
+                                <varName>
+                                    guess
+                                </varName>
+                            </term>
+                            <op>
+                                <symbol>=</symbol>
+                            </op>
+                            <term>
+                                <varName>
+                                    randomNumber
+                                </varName>
+                            </term>
+                        </expression>
+                        <symbol>)</symbol>
+                        <symbol>{</symbol>
+                        <statements>
+                            <statement>
+                                <doStatement>
+                                    <keyword>do</keyword>
+                                    <subroutineCall>
+                                        <classvarName>
+                                            <varName>
+                                                Output
+                                            </varName>
+                                            <symbol>.</symbol>
+                                            <subroutineName>printString</subroutineName>
+                                            <symbol>(</symbol>
+                                            <expressionList>
+                                                <expression>
+                                                    <term>
+                                                        "Félicitation ! Vous avez gagné !\n"
+                                                    </term>
+                                                </expression>
+                                            </expressionList>
+                                            <symbol>)</symbol>
+                                        </classvarName>
+                                    </subroutineCall>
+                                    <symbol>;</symbol>
+                                </doStatement>
+                            </statement>
+                            <statement>
+                                <letStatement>
+                                    <keyword>let</keyword>
+                                    <varName>
+                                        gameRunning
+                                    </varName>
+                                    <symbol>=</symbol>
+                                    <expression>
+                                        <term>
+                                            <KeyWordConstant>
+                                                <keyword>false</keyword>
+                                            </KeyWordConstant>
+                                        </term>
+                                    </expression>
+                                    <symbol>;</symbol>
+                                </letStatement>
+                            </statement>
+                        </statements>
+                        <symbol>}</symbol>
+                        <keyword>else</keyword>
+                        <symbol>{</symbol>
+                        <statements>
+                            <statement>
+                                <ifStatement>
+                                    <keyword>if</keyword>
+                                    <symbol>(</symbol>
+                                    <expression>
+                                        <term>
+                                            <varName>
+                                                guess
+                                            </varName>
+                                        </term>
+                                        <op>
+                                            <symbol>
+                                                <
+                                            </symbol>
+                                        </op>
+                                        <term>
+                                            <varName>
+                                                randomNumber
+                                            </varName>
+                                        </term>
+                                    </expression>
+                                    <symbol>)</symbol>
+                                    <symbol>{</symbol>
+                                    <statements>
+                                        <statement>
+                                            <doStatement>
+                                                <keyword>do</keyword>
+                                                <subroutineCall>
+                                                    <classvarName>
+                                                        <varName>
+                                                            Output
+                                                        </varName>
+                                                        <symbol>.</symbol>
+                                                        <subroutineName>printString</subroutineName>
+                                                        <symbol>(</symbol>
+                                                        <expressionList>
+                                                            <expression>
+                                                                <term>
+                                                                    "Trop petit, réessayez !\n"
+                                                                </term>
+                                                            </expression>
+                                                        </expressionList>
+                                                        <symbol>)</symbol>
+                                                    </classvarName>
+                                                </subroutineCall>
+                                                <symbol>;</symbol>
+                                            </doStatement>
+                                        </statement>
+                                    </statements>
+                                    <symbol>}</symbol>
+                                    <keyword>else</keyword>
+                                    <symbol>{</symbol>
+                                    <statements>
+                                        <statement>
+                                            <doStatement>
+                                                <keyword>do</keyword>
+                                                <subroutineCall>
+                                                    <classvarName>
+                                                        <varName>
+                                                            Output
+                                                        </varName>
+                                                        <symbol>.</symbol>
+                                                        <subroutineName>printString</subroutineName>
+                                                        <symbol>(</symbol>
+                                                        <expressionList>
+                                                            <expression>
+                                                                <term>
+                                                                    "Trop grand, réessayez !\n"
+                                                                </term>
+                                                            </expression>
+                                                        </expressionList>
+                                                        <symbol>)</symbol>
+                                                    </classvarName>
+                                                </subroutineCall>
+                                                <symbol>;</symbol>
+                                            </doStatement>
+                                        </statement>
+                                    </statements>
+                                    <symbol>}</symbol>
+                                </ifStatement>
+                            </statement>
+                        </statements>
+                        <symbol>}</symbol>
+                    </ifStatement>
+                </statement>
+                <statement>
+                    <returnStatement>
+                        <keyword>return</keyword>
+                        <symbol>;</symbol>
+                    </returnStatement>
+                </statement>
+            </statements>
+            <symbol>}</symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <symbol>}</symbol>
 </class>
