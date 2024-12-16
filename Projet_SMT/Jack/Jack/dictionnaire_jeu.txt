@@ -1,0 +1,83 @@
+{
+    'line': 1,
+    'col': 1,
+    'type': 'class',
+    'name': 'GuessNumber',
+    'classVarDecs': [
+        {'line': 2, 'col': 5, 'kind': 'static', 'type': 'boolean', 'names': ['gameRunning']},
+        {'line': 3, 'col': 5, 'kind': 'static', 'type': 'int', 'names': ['randomNumber']},
+        {'line': 4, 'col': 5, 'kind': 'static', 'type': 'int', 'names': ['userGuess']}
+    ],
+    'subroutines': [
+        {
+            'line': 5,
+            'col': 5,
+            'type': 'function',
+            'returnType': 'void',
+            'name': 'main',
+            'parameters': [],
+            'body': {
+                'line': 6,
+                'col': 7,
+                'type': 'subroutineBody',
+                'varDecs': [],
+                'statements': [
+                    {'type': 'do', 'call': {'classOrVar': 'Output', 'subroutineName': 'printString', 'arguments': ['Bienvenue au jeu Guess the Number!\\n']}},
+                    {'type': 'do', 'call': {'classOrVar': 'Output', 'subroutineName': 'printString', 'arguments': ["J'ai sélectionné un nombre entre 0 et 20.\\n"]}},
+                    {'type': 'let', 'variable': 'gameRunning', 'index': None, 'value': 'true'},
+                    {'type': 'do', 'call': {'classOrVar': 'GuessNumber', 'subroutineName': 'generateRandomNumber', 'arguments': []}},
+                    {'type': 'while', 'condition': 'gameRunning', 'body': [
+                        {'type': 'do', 'call': {'classOrVar': 'Output', 'subroutineName': 'printString', 'arguments': ['Entrez votre proposition: ']}},
+                        {'type': 'let', 'variable': 'userGuess', 'index': None, 'value': {'classOrVar': 'Keyboard', 'subroutineName': 'readInt', 'arguments': []}},
+                        {'type': 'do', 'call': {'classOrVar': 'GuessNumber', 'subroutineName': 'checkGuess', 'arguments': ['userGuess']}}
+                    ]}
+                ]
+            }
+        },
+        {
+            'line': 12,
+            'col': 5,
+            'type': 'function',
+            'returnType': 'void',
+            'name': 'generateRandomNumber',
+            'parameters': [],
+            'body': {
+                'line': 13,
+                'col': 7,
+                'type': 'subroutineBody',
+                'varDecs': [],
+                'statements': [
+                    {'type': 'let', 'variable': 'randomNumber', 'index': None, 'value': {'classOrVar': 'Math', 'subroutineName': 'random', 'arguments': [21]}},
+                    {'type': 'return', 'value': None}
+                ]
+            }
+        },
+        {
+            'line': 17,
+            'col': 5,
+            'type': 'function',
+            'returnType': 'void',
+            'name': 'checkGuess',
+            'parameters': [{'type': 'int', 'name': 'guess'}],
+            'body': {
+                'line': 18,
+                'col': 7,
+                'type': 'subroutineBody',
+                'varDecs': [],
+                'statements': [
+                    {'type': 'if', 'condition': {'op': '=', 'left': 'guess', 'right': 'randomNumber'}, 'true': [
+                        {'type': 'do', 'call': {'classOrVar': 'Output', 'subroutineName': 'printString', 'arguments': ['Félicitations! Vous avez deviné!\\n']}},
+                        {'type': 'let', 'variable': 'gameRunning', 'index': None, 'value': 'false'}
+                    ], 'false': [
+                        {'type': 'if', 'condition': {'op': '<', 'left': 'guess', 'right': 'randomNumber'}, 'true': [
+                            {'type': 'do', 'call': {'classOrVar': 'Output', 'subroutineName': 'printString', 'arguments': ['Trop petit!\\n']}}
+                        ], 'false': [
+                            {'type': 'do', 'call': {'classOrVar': 'Output', 'subroutineName': 'printString', 'arguments': ['Trop grand!\\n']}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': None}
+                ]
+            }
+        }
+    ]
+}
