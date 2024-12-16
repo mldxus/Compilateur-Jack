@@ -1,0 +1,178 @@
+// PaddleBall.vm
+
+// Variables globales
+// static 0: gameRunning (boolean)
+// static 1: ballX
+// static 2: ballY
+// static 3: ballDirX
+// static 4: ballDirY
+// static 5: paddleX
+
+function PaddleBall.main 0
+// Initialisation des variables
+push constant 80        // ballX = 80
+pop static 1
+push constant 20        // ballY = 20
+pop static 2
+push constant 1         // ballDirX = 1
+pop static 3
+push constant 1         // ballDirY = 1
+pop static 4
+push constant 70        // paddleX = 70
+pop static 5
+push constant 1         // gameRunning = true
+pop static 0
+
+// Boucle principale du jeu
+label GAME_LOOP
+push static 0           // Vérifie si gameRunning est vrai
+if-goto CONTINUE_GAME
+goto END_GAME
+
+label CONTINUE_GAME
+call PaddleBall.draw 0
+call PaddleBall.updateBall 0
+call PaddleBall.checkCollision 0
+call PaddleBall.controlPaddle 0
+push constant 5
+call Sys.wait 1
+goto GAME_LOOP
+
+label END_GAME
+call Screen.clearScreen 0
+goto END
+
+label END
+return
+
+// Dessine la balle et la palette
+function PaddleBall.draw 0
+call Screen.clearScreen 0
+
+// Dessine la balle
+push static 1
+push static 2
+call Screen.drawPixel 2
+
+// Dessine la palette
+push static 5
+push constant 23
+call Screen.drawPixel 2
+push static 5
+push constant 1
+add
+push constant 23
+call Screen.drawPixel 2
+push static 5
+push constant 2
+add
+push constant 23
+call Screen.drawPixel 2
+return
+
+// Met à jour la position de la balle
+function PaddleBall.updateBall 0
+// ballX = ballX + ballDirX
+push static 1
+push static 3
+add
+pop static 1
+
+// ballY = ballY + ballDirY
+push static 2
+push static 4
+add
+pop static 2
+
+// Rebond sur les murs
+push static 1
+push constant 0
+lt
+if-goto BOUNCE_X
+push static 1
+push constant 159
+gt
+if-goto BOUNCE_X
+goto CONTINUE_Y
+
+label BOUNCE_X
+push static 3
+neg
+pop static 3
+
+label CONTINUE_Y
+push static 2
+push constant 0
+lt
+if-goto BOUNCE_Y
+goto CONTINUE_GAME
+
+label BOUNCE_Y
+push static 4
+neg
+pop static 4
+goto CONTINUE_GAME
+
+label CONTINUE_GAME
+// Vérifie si la balle touche le bas de l'écran
+push static 2
+push constant 24
+gt
+if-goto GAME_OVER
+return
+
+label GAME_OVER
+push constant 0
+pop static 0
+return
+
+// Vérifie les collisions avec la palette
+function PaddleBall.checkCollision 0
+push static 2
+push constant 22
+eq
+if-goto CHECK_X
+return
+
+label CHECK_X
+push static 1
+push static 5
+gt
+push static 1
+push static 5
+push constant 10
+add
+lt
+and
+if-goto COLLISION
+return
+
+label COLLISION
+push static 4
+neg
+pop static 4
+return
+
+// Contrôle de la palette
+function PaddleBall.controlPaddle 0
+push constant 130       // Flèche gauche
+call Keyboard.keyPressed 0
+if-goto MOVE_LEFT
+push constant 132       // Flèche droite
+call Keyboard.keyPressed 0
+if-goto MOVE_RIGHT
+return
+
+label MOVE_LEFT
+push static 5
+push constant 2
+sub
+pop static 5
+return
+
+label MOVE_RIGHT
+push static 5
+push constant 2
+add
+pop static 5
+return
